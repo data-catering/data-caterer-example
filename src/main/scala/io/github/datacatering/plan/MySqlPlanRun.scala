@@ -48,7 +48,3 @@ class MySqlPlanRun extends PlanRun {
 
   execute(myPlan, config, accountTask, balancesTask, transactionsTask)
 }
-
-/*
-
- */

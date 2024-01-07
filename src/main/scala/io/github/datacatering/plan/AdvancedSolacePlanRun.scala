@@ -24,6 +24,7 @@ class AdvancedSolacePlanRun extends PlanRun {
         .schema(
           field.name("account_id").regex("ACC[0-9]{8}"),
           field.name("year").`type`(IntegerType).min(2021).max(2023),
+          field.name("account_status").oneOf("open", "closed", "suspended", "pending"),
           field.name("amount").`type`(DoubleType),
           field.name("details")
             .schema(

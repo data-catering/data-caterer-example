@@ -90,7 +90,7 @@ services:
     volumes:
       - "${HOME}/data/solace:/var/lib/solace"
     healthcheck:
-      test: [ "CMD-SHELL", "curl", "--output", "/dev/null", "--silent", "--head", "--fail", "http://solaceserver:8080" ]
+      test: [ "CMD-SHELL", "curl", "--output", "/dev/null", "--silent", "--head", "--fail", "http://localhost:8080" ]
       interval: "30s"
       timeout: "5s"
       retries: 3
@@ -109,7 +109,7 @@ services:
         max_attempts: 1
 
   solace:
-    image: "alpine:3.18.3"
+    image: "solace/solace-pubsub-standard:10.4"
     entrypoint: [ "/bin/sh", "-c", "/opt/app/setup_solace.sh" ]
     volumes:
       - "./data/solace:/opt/app"
