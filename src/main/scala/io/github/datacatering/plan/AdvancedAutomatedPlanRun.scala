@@ -11,6 +11,7 @@ class AdvancedAutomatedPlanRun extends PlanRun {
     .postgres("my_postgres", "jdbc:postgresql://host.docker.internal:5432/customer")
     .enableUniqueCheck(true)
     .enableGeneratePlanAndTasks(true)
+    .enableGenerateValidations(true)
     .generatedPlanAndTaskFolderPath("/opt/app/data/generated")
     .generatedReportsFolderPath("/opt/app/data/report")
 

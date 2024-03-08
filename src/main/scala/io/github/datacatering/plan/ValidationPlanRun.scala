@@ -57,7 +57,7 @@ class ValidationPlanRun extends PlanRun {
       validation.expr("FORALL(update_history, x -> x.updated_time > TIMESTAMP('2022-01-01 00:00:00'))"),
       validation.col("update_history").greaterThanSize(2),
       validation.unique("account_id"),
-      validation.groupBy().count().isEqual(100),
+      validation.count().isEqual(100),
       validation.groupBy("account_id").max("balance").lessThan(900),
       validation.upstreamData(firstJsonTask)
         .joinColumns("account_id")

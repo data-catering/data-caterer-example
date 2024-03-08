@@ -8,7 +8,7 @@ import io.github.datacatering.datacaterer.api.PlanRun
 class AdvancedDeletePlanRun extends PlanRun {
 
   val autoRun = configuration
-    .postgres("my_postres", "jdbc:postgresql://host.docker.internal:5432/customer")
+    .postgres("my_postgres", "jdbc:postgresql://host.docker.internal:5432/customer")
     .enableGeneratePlanAndTasks(true)
     .enableRecordTracking(true)
     .enableDeleteGeneratedRecords(false)

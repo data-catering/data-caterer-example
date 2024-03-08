@@ -4,6 +4,7 @@ import io.github.datacatering.datacaterer.api.PlanRun
 import io.github.datacatering.datacaterer.api.model.{ArrayType, DateType, DoubleType, IntegerType, TimestampType}
 
 import java.sql.{Date, Timestamp}
+import java.time.LocalDate
 
 class DocumentationPlanRun extends PlanRun {
 
@@ -14,7 +15,7 @@ class DocumentationPlanRun extends PlanRun {
       field.name("account_id").regex("ACC[0-9]{8}"),
       field.name("year").`type`(IntegerType).sql("YEAR(date)"),
       field.name("balance").`type`(DoubleType).min(10).max(1000),
-      field.name("date").`type`(DateType).min(Date.valueOf("2022-01-01")),
+      field.name("date").`type`(DateType).min(Date.valueOf(LocalDate.now())),
       field.name("status").sql("element_at(sort_array(update_history, false), 1).status"),
       field.name("update_history")
         .`type`(ArrayType)

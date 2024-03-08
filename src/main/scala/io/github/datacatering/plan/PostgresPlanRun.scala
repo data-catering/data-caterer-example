@@ -4,6 +4,7 @@ import io.github.datacatering.datacaterer.api.PlanRun
 import io.github.datacatering.datacaterer.api.model.{DateType, DoubleType, IntegerType, TimestampType}
 
 import java.sql.Date
+import java.time.LocalDate
 
 class PostgresPlanRun extends PlanRun {
 
@@ -14,7 +15,7 @@ class PostgresPlanRun extends PlanRun {
       field.name("customer_id_int").`type`(IntegerType).min(1).max(1000),
       field.name("created_by").expression("#{Name.name}"),
       field.name("created_by_fixed_length").sql("CASE WHEN account_status IN ('open', 'closed') THEN 'eod' ELSE 'event' END"),
-      field.name("open_timestamp").`type`(TimestampType).min(Date.valueOf("2022-01-01")),
+      field.name("open_timestamp").`type`(TimestampType).min(Date.valueOf(LocalDate.now())),
       field.name("account_status").oneOf("open", "closed", "suspended", "pending")
     )
     .count(count.records(100))
