@@ -3,7 +3,7 @@ steps:
   - name: "balances"
     type: "postgres"
     count:
-      records: 1000000
+      records: 1000
     options:
       dbtable: "account.balances"
     schema:
@@ -31,7 +31,7 @@ steps:
   - name: "transactions"
     type: "postgres"
     count:
-      records: 400000
+      records: 4000
       perColumn:
         columnNames:
           - "account_number"

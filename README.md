@@ -79,6 +79,12 @@ Change to another data source via:
 DATA_SOURCE=cassandra docker-compose up -d datacaterer
 ```
 
+If you want to use a [different YAML plan](docker/data/custom/plan) for the data source, you can run:
+
+```shell
+PLAN=plan/postgres-multiple-tables DATA_SOURCE=postgres docker-compose up -d datacaterer
+```
+
 ## Helm
 
 ```shell
