@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS account.balances
 
 CREATE TABLE IF NOT EXISTS account.transactions
 (
-    account_number VARCHAR(20) NOT NULL REFERENCES account.balances(account_number),
+    account_number VARCHAR(20) NOT NULL REFERENCES account.balances (account_number),
     create_time    TIMESTAMP,
     transaction_id VARCHAR(20),
     amount         DOUBLE PRECISION,
