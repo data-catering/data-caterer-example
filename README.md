@@ -2,26 +2,28 @@
 
 ![Data Catering](misc/logo/logo_landscape_banner.svg)
 
-Data Caterer is a metadata driven data generation tool that aids in creating production like data across batch and event
-data systems. Run data validations to ensure your systems have ingested it as expected. Use the Java, Scala API, or YAML
-files to help with setup or customisation that are all run via Docker.
+Data Caterer is a metadata driven test data management tool that aids in creating production like data across batch and 
+event data systems. Run data validations to ensure your systems have ingested it as expected. Use the Java, Scala API, 
+UI, or YAML files to help with setup or customisation that are all run via Docker.
 
 This repo contains example Java and Scala API usage for Data Caterer.
 
 ## How
 
-Can follow detailed documentation found [here](https://pflooky.github.io/data-caterer-docs/setup/) for more details.
+Check out any of [the Scala examples](src/main/scala/io/github/datacatering/plan) or 
+[Java examples](src/main/java/io/github/datacatering/plan). If you are looking for more information, you can follow 
+[**detailed documentation found here**](https://data.catering/setup/).
 
 ### Java
 
 1. Create new Java class similar
-   to [DocumentationJavaPlanRun.java](src/main/java/com/github/pflooky/plan/DocumentationJavaPlanRun.java)
+   to [DocumentationJavaPlanRun.java](src/main/java/io/github/datacatering/plan/DocumentationJavaPlanRun.java)
    1. Needs to extend `io.github.datacatering.datacaterer.javaapi.api.PlanRun`
 
 ### Scala
 
 1. Create new Scala class similar
-   to [DocumentationPlanRun.scala](src/main/scala/com/github/pflooky/plan/DocumentationPlanRun.scala)
+   to [DocumentationPlanRun.scala](src/main/scala/io/github/datacatering/plan/DocumentationPlanRun.scala)
    1. Needs to extend `io.github.datacatering.datacaterer.api.PlanRun`
 
 ## Run
@@ -56,7 +58,7 @@ cd docker
 PLAN_CLASS=io.github.datacatering.plan.DocumentationPlanRun DATA_SOURCE=postgres docker-compose up -d datacaterer
 ```
 
-[Details from docs](https://pflooky.github.io/data-caterer-docs/get-started/docker/).  
+[Details from docs](https://data.catering/get-started/docker/).  
 Docker compose sample found under `docker` folder.
 
 ```shell
