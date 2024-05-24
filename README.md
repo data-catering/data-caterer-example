@@ -8,11 +8,19 @@ UI, or YAML files to help with setup or customisation that are all run via Docke
 
 This repo contains example Java and Scala API usage for Data Caterer.
 
+![Basic data flow of Data Caterer](misc/diagram/high_level_flow-run-config-basic-flow-basic-flow.svg)
+
 ## How
 
 Check out any of [the Scala examples](src/main/scala/io/github/datacatering/plan) or 
 [Java examples](src/main/java/io/github/datacatering/plan). If you are looking for more information, you can follow 
 [**detailed documentation found here**](https://data.catering/setup/).
+
+Not comfortable with Java or Scala? No worries.
+[You can use the UI via these steps](https://data.catering/get-started/quick-start/).
+  
+Want some YAML instead? Also, no worries. Check the example [plan](docker/data/custom/plan) and 
+[task](docker/data/custom/task) YAML files here.
 
 ### Java
 

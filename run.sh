@@ -45,6 +45,7 @@ DOCKER_CMD=(
   -v "$(pwd)/docker/sample/tracking:/opt/app/record-tracking"
   -v "$(pwd)/docker/mount:/opt/app/mount"
   -e "PLAN_CLASS=$full_class_name"
+  -e "DEPLOY_MODE=client"
   -e "DRIVER_MEMORY=2g"
   -e "EXECUTOR_MEMORY=2g"
   "$additional_env_vars"
