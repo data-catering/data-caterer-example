@@ -3,9 +3,9 @@ package io.github.datacatering.plan
 import io.github.datacatering.datacaterer.api.PlanRun
 import io.github.datacatering.datacaterer.api.model.{DateType, DecimalType, TimestampType}
 
-class CsvPlan extends PlanRun {
+class ParquetPlan extends PlanRun {
 
-  val accountTask = csv("customer_accounts", "/opt/app/data/customer/account", Map("header" -> "true"))
+  val accountTask = parquet("customer_accounts", "/opt/app/data/customer/account_parquet")
     .schema(
       field.name("account_id").regex("ACC[0-9]{8}").unique(true),
       field.name("balance").`type`(new DecimalType(5, 2)).min(1).max(1000),
@@ -16,7 +16,7 @@ class CsvPlan extends PlanRun {
     )
     .count(count.records(100))
 
-  val transactionTask = csv("customer_transactions", "/opt/app/data/customer/transaction", Map("header" -> "true"))
+  val transactionTask = parquet("customer_transactions", "/opt/app/data/customer/transaction_parquet")
     .schema(
       field.name("account_id"),
       field.name("full_name"),

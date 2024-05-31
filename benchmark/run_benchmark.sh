@@ -44,6 +44,7 @@ run_docker() {
         -v "$(pwd)/docker/sample:/opt/app/data" \
         -e "PLAN_CLASS=$1" \
         -e "RECORD_COUNT=$2" \
+        -e "DEPLOY_MODE=client" \
         -e "$driver_memory" \
         -e "$executor_memory" \
         --network "docker_default" \

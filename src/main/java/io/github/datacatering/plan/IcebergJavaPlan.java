@@ -9,9 +9,9 @@ import io.github.datacatering.datacaterer.javaapi.api.PlanRun;
 import java.util.List;
 import java.util.Map;
 
-public class CsvJavaPlan extends PlanRun {
+public class IcebergJavaPlan extends PlanRun {
     {
-        var accountTask = csv("customer_accounts", "/opt/app/data/customer/account", Map.of("header", "true"))
+        var accountTask = iceberg("customer_accounts", "/opt/app/data/customer/iceberg", "account.accounts")
                 .schema(
                         field().name("account_id").regex("ACC[0-9]{8}").unique(true),
                         field().name("balance").type(new DecimalType(5, 2)).min(1).max(1000),
@@ -22,7 +22,7 @@ public class CsvJavaPlan extends PlanRun {
                 )
                 .count(count().records(100));
 
-        var transactionTask = csv("customer_transactions", "/opt/app/data/customer/transaction", Map.of("header", "true"))
+        var transactionTask = iceberg("customer_transactions", "/opt/app/data/customer/iceberg", "account.transactions")
                 .schema(
                         field().name("account_id"),
                         field().name("full_name"),
