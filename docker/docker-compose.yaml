@@ -118,7 +118,7 @@ services:
         condition: "service_healthy"
 
   cassandraserver:
-    image: "datastax/dse-server:6.8.37"
+    image: "datastax/dse-server:6.8.48"
     environment:
       - "DS_LICENSE=accept"
     volumes:
