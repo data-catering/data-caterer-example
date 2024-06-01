@@ -151,7 +151,7 @@ services:
       - "GUNICORN_CMD_ARGS=--capture-output --error-logfile - --access-logfile - --access-logformat '%(h)s %(t)s %(r)s %(s)s Host: %({Host}i)s}'"
 
   kafkaserver:
-    image: "confluentinc/confluent-local:7.4.1"
+    image: "confluentinc/confluent-local:7.6.1"
     environment:
       - "KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT"
       - "KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT"
@@ -170,7 +170,7 @@ services:
       - "29092"
 
   kafka:
-    image: "confluentinc/confluent-local:7.4.1"
+    image: "confluentinc/confluent-local:7.6.1"
     entrypoint: [ "/bin/sh", "-c", "/opt/app/setup_kafka.sh" ]
     volumes:
       - "./data/kafka:/opt/app"
