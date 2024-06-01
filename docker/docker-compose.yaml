@@ -42,7 +42,7 @@ services:
       - "5432:5432"
 
   postgres:
-    image: "alpine:3.18.3"
+    image: "alpine:3.20.0"
     depends_on:
       postgresserver:
         condition: "service_healthy"
@@ -61,7 +61,7 @@ services:
       - "5432:5432"
 
   postgresdvd:
-    image: "alpine:3.18.3"
+    image: "alpine:3.20.0"
     depends_on:
       postgresdvdserver:
         condition: "service_healthy"
@@ -138,7 +138,7 @@ services:
       memlock: -1
 
   cassandra:
-    image: "alpine:3.18.3"
+    image: "alpine:3.20.0"
     depends_on:
       cassandraserver:
         condition: "service_healthy"
