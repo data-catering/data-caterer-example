@@ -25,7 +25,7 @@ services:
       - "4040:4040"
 
   postgresserver:
-    image: "postgres:14.12"
+    image: "postgres:16.3"
     environment:
       - "POSTGRES_USER=postgres"
       - "POSTGRES_PASSWORD=postgres"
