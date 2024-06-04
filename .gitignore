@@ -32,6 +32,8 @@ docker/data/custom/recordTracking
 docker/data/custom/report
 docker/sample
 
+benchmark/jars
+
 .tmp_prev_class_name
 
 *.cast

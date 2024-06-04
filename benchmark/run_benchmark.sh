@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 
+enable_query_engine_run=${ENABLE_QUERY_ENGINE_RUN:-true}
+enable_data_size_run=${ENABLE_DATA_SIZE_RUN:-true}
+enable_data_sink_run=${ENABLE_DATA_SINK_RUN:-true}
+
 data_caterer_version=$(grep dataCatererVersion gradle.properties | cut -d= -f2)
 image_suffix="-basic"
 default_job="io.github.datacatering.plan.benchmark.BenchmarkParquetPlanRun"
+#default_job="io.github.datacatering.plan.benchmark.BenchmarkValidationPlanRun"
 default_record_count="100000"
 driver_memory="DRIVER_MEMORY=2g"
 executor_memory="EXECUTOR_MEMORY=2g"
@@ -13,14 +18,13 @@ case "${uname_out}" in
     Darwin*)  sed_option="-E";;
     *)        sed_option="-r";;
 esac
-spark_query_execution_engines=("default" "gluten")  #"blaze"
 data_sizes=(10000 100000 1000000)
 job_names=("BenchmarkForeignKeyPlanRun" "BenchmarkJsonPlanRun" "BenchmarkParquetPlanRun") #"BenchmarkAdvancedKafkaPlanRun"
 
-gluten_spark_conf="--conf spark.plugins=io.glutenproject.GlutenPlugin
---conf spark.memory.offHeap.enabled=true
---conf spark.memory.offHeap.size=1024mb
---conf spark.shuffle.manager=org.apache.spark.shuffle.sort.ColumnarShuffleManager"
+spark_query_execution_engines=("default" "blaze" "comet" "gluten")
+gluten_spark_conf="--conf \"spark.plugins=io.glutenproject.GlutenPlugin\" --conf \"spark.memory.offHeap.enabled=true\" --conf \"spark.memory.offHeap.size=1024mb\" --conf \"spark.shuffle.manager=org.apache.spark.shuffle.sort.ColumnarShuffleManager\""
+blaze_spark_conf="--conf \"spark.sql.extensions=org.apache.spark.sql.blaze.BlazeSparkSessionExtension\" --conf \"spark.shuffle.manager=org.apache.spark.sql.execution.blaze.shuffle.BlazeShuffleManager\""
+comet_spark_conf="--conf \"spark.sql.extensions=org.apache.comet.CometSparkSessionExtensions\" --conf \"spark.comet.enabled=true\" --conf \"spark.comet.exec.enabled=true\" --conf \"spark.comet.exec.all.enabled=true\" --conf \"spark.comet.explainFallback.enabled=true\""
 
 echo "Benchmark run" > "$benchmark_result_file"
 {
@@ -37,16 +41,26 @@ run_docker() {
   for num_run in $(seq 1 $num_runs)
   do
     echo "Run $num_run of $num_runs"
+    case "$3" in
+      blaze*) additional_conf="$blaze_spark_conf";;
+      comet*) additional_conf="$comet_spark_conf";;
+      gluten*) additional_conf="$gluten_spark_conf";;
+      *) additional_conf="";;
+    esac
 
     time_taken=$({
       command time docker run -p 4040:4040 \
         -v "$(pwd)/build/libs/data-caterer-example-0.1.0.jar:/opt/spark/jars/data-caterer.jar" \
+        -v "$(pwd)/benchmark/jars/blaze.jar:/opt/spark/jars/blaze.jar" \
+        -v "$(pwd)/benchmark/jars/comet.jar:/opt/spark/jars/comet.jar" \
+        -v "$(pwd)/benchmark/jars/gluten.jar:/opt/spark/jars/gluten.jar" \
         -v "$(pwd)/docker/sample:/opt/app/data" \
         -e "PLAN_CLASS=$1" \
         -e "RECORD_COUNT=$2" \
         -e "DEPLOY_MODE=client" \
         -e "$driver_memory" \
         -e "$executor_memory" \
+        -e "ADDITIONAL_OPTS=$additional_conf" \
         --network "docker_default" \
         datacatering/data-caterer"$image_suffix":"$data_caterer_version";
     } 2>&1 | tail -1 | sed "$sed_option" "s/^ +([0-9\.]+) real.*$/\1/")
@@ -55,7 +69,7 @@ run_docker() {
     else
       final_record_count=$2
     fi
-    echo "$1, $final_record_count, $num_run, $time_taken" >> "$benchmark_result_file"
+    echo "$1:$3, $final_record_count, $num_run, $time_taken" >> "$benchmark_result_file"
   done
 }
 
@@ -70,39 +84,37 @@ echo "Pulling image before starting benchmarks"
 docker pull datacatering/data-caterer"$image_suffix":"$data_caterer_version"
 
 echo "Running benchmarks"
-echo "Running Spark query execution engine benchmarks"
-#for spark_qe in "${spark_query_execution_engines[@]}"; do
-#  echo "Running for Spark query execution engine: $spark_qe"
-#  case "$spark_qe" in
-#    gluten*) spark_conf=gluten_spark_conf;;
-#    *) ;;
-#  esac
-#  run_docker "$default_job" "$default_record_count" "$spark_conf"
-#done
+if [[ "$enable_query_engine_run" == true ]]; then
+  echo "Running Spark query execution engine benchmarks"
+  for spark_qe in "${spark_query_execution_engines[@]}"; do
+    echo "Running for Spark query execution engine: $spark_qe"
+    run_docker "$default_job" "1000000" "$spark_qe"
+  done
+fi
 
-echo "Running data size benchmarks"
-for record_count in "${data_sizes[@]}"; do
-  echo "Running for data size: $record_count"
-  run_docker "$default_job" "$record_count"
-done
+if [[ "$enable_data_size_run" ==  true ]]; then
+  echo "Running data size benchmarks"
+  for record_count in "${data_sizes[@]}"; do
+    echo "Running for data size: $record_count"
+    run_docker "$default_job" "$record_count"
+  done
+fi
 
-echo "Running data sink benchmarks"
-for job in "${job_names[@]}"; do
-  echo "Running for job: $job"
-  full_class_name="io.github.datacatering.plan.benchmark.$job"
-  if [[ "$job" == *"Advanced"* ]]; then
-    image_suffix=""
-  fi
-  run_docker "$full_class_name" "$default_record_count"
-done
+if [[ "$enable_data_sink_run" ==  true ]]; then
+  echo "Running data sink benchmarks"
+  for job in "${job_names[@]}"; do
+    echo "Running for job: $job"
+    full_class_name="io.github.datacatering.plan.benchmark.$job"
+    if [[ "$job" == *"Advanced"* ]]; then
+      image_suffix=""
+    fi
+    run_docker "$full_class_name" "$default_record_count"
+  done
+fi
+
+echo "Printing benchmark results"
+cat "$benchmark_result_file"
 
 echo "Cleaning docker runs..."
 docker ps -a | grep "datacatering/data-caterer-basic" | awk -F " " '{print $1}' | xargs docker rm
 echo "Done!"
-
-#configuration
-#- generate data
-#- generate schema and data
-#- generate schema, data and validations
-#- generate schema, data and validations with report
-

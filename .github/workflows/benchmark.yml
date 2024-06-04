@@ -1,0 +1,19 @@
+name: Run performance benchmark tests
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Get Spark query engine jars
+        run: bash benchmarks/setup_query_engine_jars.sh
+      - name: Run benchmark script
+        run: bash benchmarks/run_benchmark.sh
