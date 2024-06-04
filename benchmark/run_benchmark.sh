@@ -63,7 +63,7 @@ run_docker() {
         -e "ADDITIONAL_OPTS=$additional_conf" \
         --network "docker_default" \
         datacatering/data-caterer"$image_suffix":"$data_caterer_version";
-    } 2>&1 | grep "real " | sed "$sed_option" "s/^.*real ([0-9\.]+)$/\1/")
+    } | grep "real " | sed "$sed_option" "s/^.*real ([0-9\.]+)$/\1/")
     if [[ $1 == *BenchmarkForeignKeyPlanRun* ]]; then
       final_record_count=$(($2 * 5))
     else
