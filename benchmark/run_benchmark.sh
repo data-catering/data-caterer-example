@@ -49,7 +49,7 @@ run_docker() {
     esac
 
     time_taken=$({
-      command time docker run -p 4040:4040 \
+      command time -p docker run -p 4040:4040 \
         -v "$(pwd)/build/libs/data-caterer-example-0.1.0.jar:/opt/spark/jars/data-caterer.jar" \
         -v "$(pwd)/benchmark/jars/blaze.jar:/opt/spark/jars/blaze.jar" \
         -v "$(pwd)/benchmark/jars/comet.jar:/opt/spark/jars/comet.jar" \
@@ -63,7 +63,7 @@ run_docker() {
         -e "ADDITIONAL_OPTS=$additional_conf" \
         --network "docker_default" \
         datacatering/data-caterer"$image_suffix":"$data_caterer_version";
-    } 2>&1 | grep "real " | sed "$sed_option" "s/^ +([0-9\.]+) real.*$/\1/")
+    } 2>&1 | tail -1 | sed "$sed_option" "s/^ +([0-9\.]+) real.*$/\1/")
     if [[ $1 == *BenchmarkForeignKeyPlanRun* ]]; then
       final_record_count=$(($2 * 5))
     else
@@ -112,7 +112,7 @@ if [[ "$enable_data_sink_run" ==  true ]]; then
   done
 fi
 
-docker ps -a | head -1 | awk -F " " '{print $1}' | xargs docker logs
+docker ps -a | tail -1 | awk -F " " '{print $1}' | xargs docker logs
 
 echo "Printing benchmark results"
 cat "$benchmark_result_file"

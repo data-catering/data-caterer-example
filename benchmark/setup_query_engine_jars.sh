@@ -13,11 +13,15 @@ echo "Getting gluten jar..."
 curl -L -o benchmark/jars/gluten.jar "https://github.com/apache/incubator-gluten/releases/download/v1.1.1/gluten-velox-bundle-spark3.4_2.12-1.1.1.jar"
 echo "Finished downloading gluten jar"
 
-echo "Building datafusion-comet..."
-#git clone git@github.com:apache/datafusion-comet.git benchmark/build
-cd benchmark/build/datafusion-comet
-make release PROFILES="-Pspark-${spark_major_version}"
-ls spark/target/comet-spark-*-SNAPSHOT.jar
-cp spark/target/comet-spark-*-SNAPSHOT.jar ../../jars/comet.jar
-cd ../../..
-echo "Finished building datafusion-comet"
+echo "Getting datafusion-comet jar..."
+curl -L -o benchmark/jars/comet.jar "https://github.com/data-catering/datafusion-comet/actions/runs/9361483276/artifacts/1565420150"
+echo "Finished downloading datafusion-comet jar"
+
+#echo "Building datafusion-comet..."
+##git clone git@github.com:apache/datafusion-comet.git benchmark/build
+#cd benchmark/build/datafusion-comet
+#make release PROFILES="-Pspark-${spark_major_version}"
+#ls spark/target/comet-spark-*-SNAPSHOT.jar
+#cp spark/target/comet-spark-*-SNAPSHOT.jar ../../jars/comet.jar
+#cd ../../..
+#echo "Finished building datafusion-comet"
