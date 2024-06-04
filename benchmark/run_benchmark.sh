@@ -61,7 +61,6 @@ run_docker() {
         -e "$driver_memory" \
         -e "$executor_memory" \
         -e "ADDITIONAL_OPTS=$additional_conf" \
-        --network "docker_default" \
         datacatering/data-caterer"$image_suffix":"$data_caterer_version";
     } | grep "real " | sed "$sed_option" "s/^.*real ([0-9\.]+)$/\1/")
     if [[ $1 == *BenchmarkForeignKeyPlanRun* ]]; then
