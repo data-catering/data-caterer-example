@@ -49,7 +49,7 @@ run_docker() {
     esac
 
     time_taken=$({
-      command time -p docker run -p 4040:4040 \
+      time -p docker run -p 4040:4040 \
         -v "$(pwd)/build/libs/data-caterer-example-0.1.0.jar:/opt/spark/jars/data-caterer.jar" \
         -v "$(pwd)/benchmark/jars/blaze.jar:/opt/spark/jars/blaze.jar" \
         -v "$(pwd)/benchmark/jars/comet.jar:/opt/spark/jars/comet.jar" \
@@ -112,6 +112,7 @@ if [[ "$enable_data_sink_run" ==  true ]]; then
   done
 fi
 
+echo "Printing logs of last docker run"
 docker ps -a | tail -1 | awk -F " " '{print $1}' | xargs docker logs
 
 echo "Printing benchmark results"

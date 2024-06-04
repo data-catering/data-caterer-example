@@ -14,7 +14,7 @@ curl -L -o benchmark/jars/gluten.jar "https://github.com/apache/incubator-gluten
 echo "Finished downloading gluten jar"
 
 echo "Getting datafusion-comet jar..."
-curl -L -o benchmark/jars/comet.jar "https://github.com/data-catering/datafusion-comet/actions/runs/9361483276/artifacts/1565420150"
+curl -L -o benchmark/jars/comet.jar "https://github.com/data-catering/datafusion-comet/releases/download/0.1.0/comet-spark-spark3.4_2.12-0.1.0-SNAPSHOT.jar"
 echo "Finished downloading datafusion-comet jar"
 
 #echo "Building datafusion-comet..."
