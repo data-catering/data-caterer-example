@@ -25,7 +25,7 @@ services:
       - "4040:4040"
 
   postgresserver:
-    image: "postgres:14.5"
+    image: "postgres:16.3"
     environment:
       - "POSTGRES_USER=postgres"
       - "POSTGRES_PASSWORD=postgres"
@@ -42,7 +42,7 @@ services:
       - "5432:5432"
 
   postgres:
-    image: "alpine:3.18.3"
+    image: "alpine:3.20.0"
     depends_on:
       postgresserver:
         condition: "service_healthy"
@@ -61,13 +61,13 @@ services:
       - "5432:5432"
 
   postgresdvd:
-    image: "alpine:3.18.3"
+    image: "alpine:3.20.0"
     depends_on:
       postgresdvdserver:
         condition: "service_healthy"
 
   mysql:
-    image: "mysql:8.0.33"
+    image: "mysql:8.4.0"
     environment:
       MYSQL_ROOT_PASSWORD: "root"
     command: "--default-authentication-plugin=mysql_native_password"
@@ -82,7 +82,7 @@ services:
       - "3306:3306"
 
   solaceserver:
-    image: "solace/solace-pubsub-standard:10.4"
+    image: "solace/solace-pubsub-standard:10.8"
     environment:
       - "username_admin_globalaccesslevel=admin"
       - "username_admin_password=admin"
@@ -109,7 +109,7 @@ services:
         max_attempts: 1
 
   solace:
-    image: "solace/solace-pubsub-standard:10.4"
+    image: "solace/solace-pubsub-standard:10.8"
     entrypoint: [ "/bin/sh", "-c", "/opt/app/setup_solace.sh" ]
     volumes:
       - "./data/solace:/opt/app"
@@ -118,7 +118,7 @@ services:
         condition: "service_healthy"
 
   cassandraserver:
-    image: "datastax/dse-server:6.8.37"
+    image: "datastax/dse-server:6.8.48"
     environment:
       - "DS_LICENSE=accept"
     volumes:
@@ -138,7 +138,7 @@ services:
       memlock: -1
 
   cassandra:
-    image: "alpine:3.18.3"
+    image: "alpine:3.20.0"
     depends_on:
       cassandraserver:
         condition: "service_healthy"
@@ -151,7 +151,7 @@ services:
       - "GUNICORN_CMD_ARGS=--capture-output --error-logfile - --access-logfile - --access-logformat '%(h)s %(t)s %(r)s %(s)s Host: %({Host}i)s}'"
 
   kafkaserver:
-    image: "confluentinc/confluent-local:7.4.1"
+    image: "confluentinc/confluent-local:7.6.1"
     environment:
       - "KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT"
       - "KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT"
@@ -170,7 +170,7 @@ services:
       - "29092"
 
   kafka:
-    image: "confluentinc/confluent-local:7.4.1"
+    image: "confluentinc/confluent-local:7.6.1"
     entrypoint: [ "/bin/sh", "-c", "/opt/app/setup_kafka.sh" ]
     volumes:
       - "./data/kafka:/opt/app"
