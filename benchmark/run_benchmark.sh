@@ -12,7 +12,7 @@ default_record_count="100000"
 driver_memory="DRIVER_MEMORY=2g"
 executor_memory="EXECUTOR_MEMORY=2g"
 benchmark_result_file="benchmark/results/benchmark_results_${data_caterer_version}.txt"
-num_runs=5
+num_runs=3
 uname_out="$(uname -s)"
 case "${uname_out}" in
     Darwin*)  sed_option="-E";;
@@ -63,6 +63,7 @@ run_docker() {
         -e "ADDITIONAL_OPTS=$additional_conf" \
         datacatering/data-caterer"$image_suffix":"$data_caterer_version";
     } 2>&1 | grep "real " | sed "$sed_option" "s/^.*real ([0-9\.]+)$/\1/")
+    echo "Time taken: $time_taken"
     if [[ $1 == *BenchmarkForeignKeyPlanRun* ]]; then
       final_record_count=$(($2 * 5))
     else
@@ -87,7 +88,7 @@ if [[ "$enable_query_engine_run" == true ]]; then
   echo "Running Spark query execution engine benchmarks"
   for spark_qe in "${spark_query_execution_engines[@]}"; do
     echo "Running for Spark query execution engine: $spark_qe"
-    run_docker "$default_job" "1000000" "$spark_qe"
+    run_docker "$default_job" "100000" "$spark_qe"
   done
 fi
 
@@ -111,8 +112,8 @@ if [[ "$enable_data_sink_run" ==  true ]]; then
   done
 fi
 
-echo "Printing logs of last docker run"
-docker ps -a | tail -1 | awk -F " " '{print $1}' | xargs docker logs
+echo "Printing logs of failed docker runs"
+docker ps -a | grep -v "Exited (0)" | awk -F " " '{print $1}' | xargs docker logs
 
 echo "Printing benchmark results"
 cat "$benchmark_result_file"
