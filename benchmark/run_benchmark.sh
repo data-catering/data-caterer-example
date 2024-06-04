@@ -48,7 +48,6 @@ run_docker() {
       *) additional_conf="";;
     esac
 
-    #2>&1
     time_taken=$({
       time -p docker run -p 4040:4040 \
         -v "$(pwd)/build/libs/data-caterer-example-0.1.0.jar:/opt/spark/jars/data-caterer.jar" \
@@ -63,7 +62,7 @@ run_docker() {
         -e "$executor_memory" \
         -e "ADDITIONAL_OPTS=$additional_conf" \
         datacatering/data-caterer"$image_suffix":"$data_caterer_version";
-    } | grep "real " | sed "$sed_option" "s/^.*real ([0-9\.]+)$/\1/")
+    } 2>&1 | grep "real " | sed "$sed_option" "s/^.*real ([0-9\.]+)$/\1/")
     if [[ $1 == *BenchmarkForeignKeyPlanRun* ]]; then
       final_record_count=$(($2 * 5))
     else
