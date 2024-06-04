@@ -48,13 +48,14 @@ run_docker() {
       *) additional_conf="";;
     esac
 
+    #2>&1
     time_taken=$({
       time -p docker run -p 4040:4040 \
         -v "$(pwd)/build/libs/data-caterer-example-0.1.0.jar:/opt/spark/jars/data-caterer.jar" \
         -v "$(pwd)/benchmark/jars/blaze.jar:/opt/spark/jars/blaze.jar" \
         -v "$(pwd)/benchmark/jars/comet.jar:/opt/spark/jars/comet.jar" \
         -v "$(pwd)/benchmark/jars/gluten.jar:/opt/spark/jars/gluten.jar" \
-        -v "$(pwd)/docker/sample:/opt/app/data" \
+        -v "/tmp:/opt/app/data" \
         -e "PLAN_CLASS=$1" \
         -e "RECORD_COUNT=$2" \
         -e "DEPLOY_MODE=client" \
