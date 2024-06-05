@@ -24,3 +24,7 @@ jobs:
         run: bash benchmark/setup_query_engine_jars.sh
       - name: Run benchmark script
         run: bash benchmark/run_benchmark.sh
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          title: Add benchmark results
