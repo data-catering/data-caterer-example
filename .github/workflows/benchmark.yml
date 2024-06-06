@@ -16,6 +16,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
+      - name: Check if benchmark has already run
+        run: |
+          version=$(grep dataCatererVersion gradle.properties | cut -d= -f2)
+          if [ ! -f benchmark/results/benchmark_results_${version}.txt ]; then
+              echo "No benchmark results for version: $version, starting to run benchmarks"
+          else
+              echo "Benchmarks already run!"
+              exit 1
+          fi
       - name: Checkout datafusion-comet repo
         uses: actions/checkout@v4
         with:
