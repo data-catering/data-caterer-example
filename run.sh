@@ -14,7 +14,11 @@ else
   curr_class_name=$1
 fi
 
-full_class_name=io.github.datacatering.plan.$curr_class_name
+if [[ $curr_class_name == *".yaml"* ]]; then
+  full_class_name="PLAN_FILE_PATH=/opt/app/custom/plan/$curr_class_name"
+else
+  full_class_name="PLAN_CLASS=io.github.datacatering.plan.$curr_class_name"
+fi
 echo -n "$curr_class_name" > .tmp_prev_class_name
 
 image_suffix="-basic"
@@ -44,7 +48,9 @@ DOCKER_CMD=(
   -v "$(pwd)/docker/sample:/opt/app/data"
   -v "$(pwd)/docker/sample/tracking:/opt/app/record-tracking"
   -v "$(pwd)/docker/mount:/opt/app/mount"
-  -e "PLAN_CLASS=$full_class_name"
+  -v "$(pwd)/docker/data/custom:/opt/app/custom"
+  -e "APPLICATION_CONFIG_PATH=/opt/app/custom/application.conf"
+  -e "$full_class_name"
   -e "DEPLOY_MODE=client"
   -e "DRIVER_MEMORY=2g"
   -e "EXECUTOR_MEMORY=2g"
@@ -54,4 +60,8 @@ DOCKER_CMD=(
 )
 
 eval "${DOCKER_CMD[@]}"
+if [[ $? != 0 ]]; then
+  echo "Failed to run"
+  exit 1
+fi
 echo "Finished!"

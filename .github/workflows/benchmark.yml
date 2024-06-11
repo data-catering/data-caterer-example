@@ -1,6 +1,4 @@
 name: Run performance benchmark tests
-permissions:
-  pull-requests: write
 
 on:
   push:
