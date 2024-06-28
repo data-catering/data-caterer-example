@@ -50,10 +50,10 @@ run_docker() {
 
     time_taken=$({
       time -p docker run -p 4040:4040 \
-        -v "$(pwd)/build/libs/data-caterer-example-0.1.0.jar:/opt/spark/jars/data-caterer.jar" \
-        -v "$(pwd)/benchmark/jars/blaze.jar:/opt/spark/jars/blaze.jar" \
-        -v "$(pwd)/benchmark/jars/comet.jar:/opt/spark/jars/comet.jar" \
-        -v "$(pwd)/benchmark/jars/gluten.jar:/opt/spark/jars/gluten.jar" \
+        -v "$(pwd)/build/libs/data-caterer-example-0.1.0.jar:/opt/app/job.jar" \
+        -v "$(pwd)/benchmark/jars/blaze.jar:/opt/app/jars/blaze.jar" \
+        -v "$(pwd)/benchmark/jars/comet.jar:/opt/app/jars/comet.jar" \
+        -v "$(pwd)/benchmark/jars/gluten.jar:/opt/app/jars/gluten.jar" \
         -v "/tmp:/opt/app/data" \
         -e "PLAN_CLASS=$1" \
         -e "RECORD_COUNT=$2" \
@@ -112,8 +112,10 @@ if [[ "$enable_data_sink_run" ==  true ]]; then
   done
 fi
 
-echo "Printing logs of failed docker runs"
-docker ps -a | grep -v "Exited (0)" | awk -F " " '{print $1}' | xargs docker logs
+echo "Printing logs of last failed docker run"
+docker ps -a | grep -v "Exited (0)" | awk -F " " '{print $1}' | tail -1 | xargs docker logs
+echo "Printing logs of last docker run"
+docker ps -a | awk -F " " '{print $1}' | tail -1 | xargs docker logs
 
 echo "Printing benchmark results"
 cat "$benchmark_result_file"

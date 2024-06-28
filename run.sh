@@ -44,7 +44,7 @@ docker network create --driver bridge docker_default || true
 echo "Running Data Caterer via docker, version: $data_caterer_version"
 DOCKER_CMD=(
   docker run -p 4040:4040
-  -v "$(pwd)/build/libs/data-caterer-example-0.1.0.jar:/opt/spark/jars/data-caterer.jar"
+  -v "$(pwd)/build/libs/data-caterer-example-0.1.0.jar:/opt/app/job.jar"
   -v "$(pwd)/docker/sample:/opt/app/data"
   -v "$(pwd)/docker/sample/tracking:/opt/app/record-tracking"
   -v "$(pwd)/docker/mount:/opt/app/mount"
