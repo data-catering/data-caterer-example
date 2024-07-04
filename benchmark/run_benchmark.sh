@@ -69,7 +69,7 @@ run_docker() {
     else
       final_record_count=$2
     fi
-    echo "$1:$3, $final_record_count, $num_run, $time_taken" >> "$benchmark_result_file"
+    echo "$1:$3,$final_record_count,$num_run,$time_taken" >> "$benchmark_result_file"
   done
 }
 
@@ -116,9 +116,6 @@ echo "Printing logs of last failed docker run"
 docker ps -a | grep -v "Exited (0)" | awk -F " " '{print $1}' | tail -1 | xargs docker logs
 echo "Printing logs of last docker run"
 docker ps -a | awk -F " " '{print $1}' | tail -1 | xargs docker logs
-
-echo "Printing benchmark results"
-cat "$benchmark_result_file"
 
 echo "Cleaning docker runs..."
 docker ps -a | grep "datacatering/data-caterer-basic" | awk -F " " '{print $1}' | xargs docker rm

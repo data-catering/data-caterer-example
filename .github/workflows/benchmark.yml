@@ -32,7 +32,10 @@ jobs:
       - name: Get Spark query engine jars
         run: bash benchmark/setup_query_engine_jars.sh
       - name: Run benchmark script
-        run: bash benchmark/run_benchmark.sh
+        run: |
+          version=$(grep dataCatererVersion gradle.properties | cut -d= -f2)
+          bash benchmark/run_benchmark.sh
+          bash benchmark/compare_benchmark_results.sh "$version"
       - name: Create pull request
         uses: peter-evans/create-pull-request@v6
         with:
