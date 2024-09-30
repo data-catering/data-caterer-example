@@ -16,7 +16,7 @@ class DeltaLakePlan extends PlanRun {
     )
     .count(count.records(100))
 
-  val transactionTask = iceberg("customer_transactions", "/opt/app/data/customer/delta")
+  val transactionTask = delta("customer_transactions", "/opt/app/data/customer/delta")
     .schema(
       field.name("account_id"),
       field.name("full_name"),
