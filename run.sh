@@ -21,17 +21,6 @@ else
 fi
 echo -n "$curr_class_name" > .tmp_prev_class_name
 
-image_suffix="-basic"
-additional_env_vars=""
-if [[ "$curr_class_name" == *"Advanced"* ]]; then
-  if [[ -z "$DATA_CATERING_API_KEY" ]]; then
-    image_suffix=""
-  else
-    image_suffix="-trial"
-    additional_env_vars=" -e API_KEY=$DATA_CATERING_API_KEY"
-  fi
-fi
-
 echo "Building jar with plan run"
 ./gradlew clean build
 if [[ $? -ne 0 ]]; then
@@ -54,9 +43,8 @@ DOCKER_CMD=(
   -e "DEPLOY_MODE=client"
   -e "DRIVER_MEMORY=2g"
   -e "EXECUTOR_MEMORY=2g"
-  "$additional_env_vars"
   --network "docker_default"
-  datacatering/data-caterer"$image_suffix":"$data_caterer_version"
+  datacatering/data-caterer:"$data_caterer_version"
 )
 
 eval "${DOCKER_CMD[@]}"

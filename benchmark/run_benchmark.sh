@@ -5,7 +5,6 @@ enable_data_size_run=${ENABLE_DATA_SIZE_RUN:-true}
 enable_data_sink_run=${ENABLE_DATA_SINK_RUN:-true}
 
 data_caterer_version=$(grep dataCatererVersion gradle.properties | cut -d= -f2)
-image_suffix="-basic"
 default_job="io.github.datacatering.plan.benchmark.BenchmarkParquetPlanRun"
 #default_job="io.github.datacatering.plan.benchmark.BenchmarkValidationPlanRun"
 default_record_count="100000"
@@ -61,7 +60,7 @@ run_docker() {
         -e "$driver_memory" \
         -e "$executor_memory" \
         -e "ADDITIONAL_OPTS=$additional_conf" \
-        datacatering/data-caterer"$image_suffix":"$data_caterer_version";
+        datacatering/data-caterer:"$data_caterer_version";
     } 2>&1 | grep "real " | sed "$sed_option" "s/^.*real ([0-9\.]+)$/\1/")
     echo "Time taken: $time_taken"
     if [[ $1 == *BenchmarkForeignKeyPlanRun* ]]; then
@@ -81,7 +80,7 @@ if [[ $? -ne 0 ]]; then
 fi
 
 echo "Pulling image before starting benchmarks"
-docker pull datacatering/data-caterer"$image_suffix":"$data_caterer_version"
+docker pull datacatering/data-caterer:"$data_caterer_version"
 
 echo "Running benchmarks"
 if [[ "$enable_query_engine_run" == true ]]; then
@@ -105,9 +104,6 @@ if [[ "$enable_data_sink_run" ==  true ]]; then
   for job in "${job_names[@]}"; do
     echo "Running for job: $job"
     full_class_name="io.github.datacatering.plan.benchmark.$job"
-    if [[ "$job" == *"Advanced"* ]]; then
-      image_suffix=""
-    fi
     run_docker "$full_class_name" "$default_record_count"
   done
 fi
@@ -118,5 +114,5 @@ echo "Printing logs of last docker run"
 docker ps -a | awk -F " " '{print $1}' | tail -1 | xargs docker logs
 
 echo "Cleaning docker runs..."
-docker ps -a | grep "datacatering/data-caterer-basic" | awk -F " " '{print $1}' | xargs docker rm
+docker ps -a | grep "datacatering/data-caterer" | awk -F " " '{print $1}' | xargs docker rm
 echo "Done!"
