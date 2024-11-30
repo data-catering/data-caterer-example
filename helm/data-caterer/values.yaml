@@ -8,7 +8,7 @@ image:
   repository: "datacatering/data-caterer"
   pullPolicy: "IfNotPresent"
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.12.1"
+  tag: "0.12.2"
 
 imagePullSecrets: []
 nameOverride: ""
