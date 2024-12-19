@@ -89,6 +89,13 @@ Change to another data source via:
 DATA_SOURCE=cassandra docker-compose up -d datacaterer
 ```
 
+### Run with YAML files
+
+Example YAML files can be found here:
+- [Plan](docker/data/custom/plan): Define tasks, data sources, foreign keys, etc. to run
+- [Task](docker/data/custom/task): Define data generation details such as schema and number of records
+- [Validation](docker/data/custom/validation): Define data validation details to run on data sources
+
 If you want to use a [different YAML plan](docker/data/custom/plan) for the data source, you can run:
 
 ```shell
