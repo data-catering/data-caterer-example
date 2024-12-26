@@ -15,15 +15,15 @@ class AdvancedOpenMetadataSourcePlanRun extends PlanRun {
   )
 
   val jsonTask = json("my_json", "/opt/app/data/json", Map("saveMode" -> "overwrite"))
-    .schema(openMetadataSource)
-    .schema(
+    .fields(openMetadataSource)
+    .fields(
       field.name("platform").oneOf("website", "mobile"),
-      field.name("customer").schema(field.name("sex").oneOf("M", "F", "O"))
+      field.name("customer").fields(field.name("sex").oneOf("M", "F", "O"))
     )
     .count(count.records(10))
 
   val csvTask = csv("my_csv", "/opt/app/data/csv")
-    .schema(openMetadataSource)
+    .fields(openMetadataSource)
 
   val conf = configuration.enableGeneratePlanAndTasks(true)
     .enableGenerateValidations(true)

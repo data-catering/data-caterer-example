@@ -8,12 +8,12 @@ import java.sql.Date
 class LargePlanRun extends PlanRun {
 
   val jsonTask = json("my_json", "/opt/app/data/json")
-    .schema(
+    .fields(
       field.name("account_id").regex("ACC[0-9]{8}"),
       field.name("name").expression("#{Name.name}"),
       field.name("txn_list")
         .`type`(ArrayType)
-        .schema(
+        .fields(
           field.name("id"),
           field.name("date").`type`(DateType).min(Date.valueOf("2022-01-01")),
           field.name("amount").`type`(DoubleType),

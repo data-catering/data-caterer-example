@@ -8,8 +8,8 @@ import java.util.Map;
 public class AdvancedHttpJavaPlanRun extends PlanRun {
     {
         var httpTask = http("my_http", Map.of(Constants.ROWS_PER_SECOND(), "1"))
-                .schema(metadataSource().openApi("/opt/app/mount/http/petstore.json"))
-                .schema(field().name("bodyContent").schema(field().name("id").regex("ID[0-9]{8}")))
+                .fields(metadataSource().openApi("/opt/app/mount/http/petstore.json"))
+                .fields(field().name("bodyContent").fields(field().name("id").regex("ID[0-9]{8}")))
                 .count(count().records(2));
 
         var myPlan = plan().addForeignKeyRelationship(

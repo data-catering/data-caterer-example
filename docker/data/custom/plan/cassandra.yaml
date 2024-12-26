@@ -7,6 +7,11 @@ tasks:
 
 sinkOptions:
   foreignKeys:
-    - - "cassandra.accounts.account_id"
-      - - "cassandra.account_status_history.account_id"
-      - []
+    - source:
+        dataSource: "cassandra"
+        step: "accounts"
+        fields: [ "account_id" ]
+      generate:
+        - dataSource: "cassandra"
+          step: "account_status_history"
+          fields: [ "account_id" ]

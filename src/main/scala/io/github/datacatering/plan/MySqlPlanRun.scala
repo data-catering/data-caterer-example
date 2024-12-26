@@ -9,7 +9,7 @@ class MySqlPlanRun extends PlanRun {
 
   val accountTask = mysql("customer_mysql", "jdbc:mysql://host.docker.internal:3306/customer")
     .table("customer", "accounts")
-    .schema(
+    .fields(
       field.name("id").`type`(IntegerType).sql("ROW_NUMBER() OVER (ORDER BY account_number)"),
       field.name("account_number").regex("[0-9]{10}").unique(true),
       field.name("customer_id_int").`type`(IntegerType).min(1).max(1000),
@@ -22,7 +22,7 @@ class MySqlPlanRun extends PlanRun {
 
   val balancesTask = mysql(accountTask)
     .table("customer", "balances")
-    .schema(
+    .fields(
       field.name("id"),
       field.name("create_time").`type`(TimestampType),
       field.name("balance").`type`(DoubleType)
@@ -30,7 +30,7 @@ class MySqlPlanRun extends PlanRun {
 
   val transactionsTask = mysql(accountTask)
     .table("customer", "transactions")
-    .schema(
+    .fields(
       field.name("id"),
       field.name("create_time").`type`(TimestampType),
       field.name("transaction_id"),

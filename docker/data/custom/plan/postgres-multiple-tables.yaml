@@ -7,6 +7,11 @@ tasks:
 
 sinkOptions:
   foreignKeys:
-    - - "postgresCustomer.balances.account_number"
-      - - "postgresCustomer.transactions.account_number"
-      - []
+    - source:
+        dataSource: "postgresCustomer"
+        step: "balances"
+        fields: [ "account_number" ]
+      generate:
+        - dataSource: "postgresCustomer"
+          step: "transactions"
+          fields: [ "account_number" ]

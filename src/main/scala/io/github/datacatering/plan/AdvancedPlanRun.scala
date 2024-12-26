@@ -16,7 +16,7 @@ class AdvancedPlanRun extends PlanRun {
       step
         .name("transaction")
         .jdbcTable("account.transaction")
-        .schema(
+        .fields(
           accountIdField,
           field.name("txn_id").regex("txn_[0-9]{5}"),
           field.name("year").`type`(IntegerType).sql("YEAR(date)"),
@@ -27,13 +27,13 @@ class AdvancedPlanRun extends PlanRun {
         )
         .count(
           count
-            .recordsPerColumnGenerator(generator.min(1).max(10), "account_id")
+            .recordsPerFieldGenerator(generator.min(1).max(10), "account_id")
         )
       ,
       step
         .name("account")
         .jdbcTable("account.account")
-        .schema(
+        .fields(
           accountIdField,
           nameField,
           field.name("open_date").`type`(DateType).min(startDate),
@@ -47,12 +47,12 @@ class AdvancedPlanRun extends PlanRun {
       step
         .name("account_info")
         .path("src/main/resources/sample/json")
-        .schema(
+        .fields(
           accountIdField,
           nameField,
           field.name("txn_list")
             .`type`(ArrayType)
-            .schema(
+            .fields(
               field.name("id").sql("_holding_txn_id"),
               field.name("date").`type`(DateType).min(startDate),
               field.name("amount").`type`(DoubleType),

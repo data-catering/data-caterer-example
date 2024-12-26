@@ -10,6 +10,11 @@ tasks:
     
 sinkOptions:
   foreignKeys:
-    - - "postgres.accounts.account_number"
-      - - "parquet.transactions.account_id"
-      - []
+    - source:
+        dataSource: "postgres"
+        step: "accounts"
+        fields: [ "account_number" ]
+      generate:
+        - dataSource: "parquet"
+          step: "transactions"
+          fields: [ "account_id" ]

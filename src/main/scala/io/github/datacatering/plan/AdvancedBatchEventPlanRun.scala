@@ -7,7 +7,7 @@ class AdvancedBatchEventPlanRun extends PlanRun {
   val kafkaTask = new AdvancedKafkaPlanRun().kafkaTask
 
   val csvTask = csv("my_csv", "/opt/app/data/csv/account")
-    .schema(
+    .fields(
       field.name("account_number"),
       field.name("year"),
       field.name("name"),

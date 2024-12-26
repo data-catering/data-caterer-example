@@ -5,7 +5,7 @@ import io.github.datacatering.datacaterer.api.PlanRun
 class AdvancedMySqlPlanRun extends PlanRun {
 
   val accountTask = mysql("customer_mysql", "jdbc:mysql://host.docker.internal:3306/customer")
-    .schema(field.name("account_number").regex("[0-9]{10}"))
+    .fields(field.name("account_number").regex("[0-9]{10}"))
     .count(count.records(100))
 
   val config = configuration

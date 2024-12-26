@@ -18,7 +18,7 @@ public class DocumentationJavaPlanRun extends PlanRun {
         String baseFolder = "/opt/app/data";
         String[] accountStatus = {"open", "closed", "pending", "suspended"};
         var jsonTask = json("account_info", baseFolder + "/json", Map.of(Constants.SAVE_MODE(), "overwrite"))
-                .schema(
+                .fields(
                         field().name("account_id").regex("ACC[0-9]{8}"),
                         field().name("year").type(IntegerType.instance()).sql("YEAR(date)"),
                         field().name("balance").type(DoubleType.instance()).min(10).max(1000),
@@ -26,12 +26,12 @@ public class DocumentationJavaPlanRun extends PlanRun {
                         field().name("status").sql("element_at(sort_array(update_history.updated_time), 1)"),
                         field().name("update_history")
                                 .type(ArrayType.instance())
-                                .schema(
+                                .fields(
                                         field().name("updated_time").type(TimestampType.instance()).min(Timestamp.valueOf("2022-01-01 00:00:00")),
                                         field().name("status").oneOf((Object[]) accountStatus)
                                 ),
                         field().name("customer_details")
-                                .schema(
+                                .fields(
                                         field().name("name").sql("_join_txn_name"),
                                         field().name("age").type(IntegerType.instance()).min(18).max(90),
                                         field().name("city").expression("#{Address.city}")
@@ -44,7 +44,7 @@ public class DocumentationJavaPlanRun extends PlanRun {
                 );
 
         var csvTxns = csv("transactions", baseFolder + "/csv", Map.of(Constants.SAVE_MODE(), "overwrite", "header", "true"))
-                .schema(
+                .fields(
                         field().name("account_id"),
                         field().name("txn_id"),
                         field().name("name"),
@@ -54,7 +54,7 @@ public class DocumentationJavaPlanRun extends PlanRun {
                 .count(
                         count()
                                 .records(100)
-                                .recordsPerColumnGenerator(generator().min(1).max(2), "account_id", "name")
+                                .recordsPerFieldGenerator(generator().min(1).max(2), "account_id", "name")
                 )
                 .validations(
                         validation().expr("LENGTH(merchant) > 0").description("Merchant should not be empty"),
@@ -64,9 +64,9 @@ public class DocumentationJavaPlanRun extends PlanRun {
         var postgresValidateTask = postgres("my_postgres", "jdbc:postgresql://host.docker.internal:5432/customer")
                 .table("account", "accounts")
                 .validations(
-                        validation().col("account_id").isNotNull(),
-                        validation().col("name").matches("[A-Z][a-z]+ [A-Z][a-z]+").errorThreshold(0.2).description("Some names have different formats"),
-                        validation().col("balance").greaterThanOrEqual(0).errorThreshold(10).description("Account can have negative balance if overdraft"),
+                        validation().field("account_id").isNull(true),
+                        validation().field("name").matches("[A-Z][a-z]+ [A-Z][a-z]+").errorThreshold(0.2).description("Some names have different formats"),
+                        validation().field("balance").greaterThan(0, false).errorThreshold(10).description("Account can have negative balance if overdraft"),
                         validation().expr("CASE WHEN status == 'closed' THEN isNotNull(close_date) ELSE isNull(close_date) END"),
                         validation().unique("account_id", "name"),
                         validation().groupBy("account_id", "name").max("login_retry").lessThan(10)

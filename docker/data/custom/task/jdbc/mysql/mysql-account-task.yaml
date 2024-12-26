@@ -6,31 +6,17 @@ steps:
       records: 50
     options:
       dbtable: "customer.accounts"
-    schema:
-      fields:
-        - name: "account_number"
-          type: "string"
-          generator:
-            type: "regex"
-            options:
-              regex: "ACC1[0-9]{5,10}"
-        - name: "account_status"
-          type: "string"
-          generator:
-            type: "oneOf"
-            options:
-              oneOf:
-                - "open"
-                - "closed"
-        - name: "open_date"
-          type: "date"
-          generator:
-            type: "random"
-        - name: "created_by"
-          type: "string"
-          generator:
-            type: "random"
-        - name: "customer_id_int"
-          type: "int"
-          generator:
-            type: "random"
+    fields:
+      - name: "account_number"
+        options:
+          regex: "ACC1[0-9]{5,10}"
+      - name: "account_status"
+        options:
+          oneOf:
+            - "open"
+            - "closed"
+      - name: "open_date"
+        type: "date"
+      - name: "created_by"
+      - name: "customer_id_int"
+        type: "int"

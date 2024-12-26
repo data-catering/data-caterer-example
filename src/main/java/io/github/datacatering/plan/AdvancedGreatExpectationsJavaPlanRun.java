@@ -12,7 +12,7 @@ public class AdvancedGreatExpectationsJavaPlanRun extends PlanRun {
         var greatExpectations = metadataSource().greatExpectations("/opt/app/mount/ge/taxi-expectations.json");
 
         var jsonTask = json("my_json", "/opt/app/data/json", Map.of("saveMode", "overwrite"))
-                .schema(
+                .fields(
                         field().name("vendor_id"),
                         field().name("pickup_datetime").type(TimestampType.instance()),
                         field().name("dropoff_datetime").type(TimestampType.instance()),
@@ -33,7 +33,7 @@ public class AdvancedGreatExpectationsJavaPlanRun extends PlanRun {
                         field().name("congestion_surcharge").type(DoubleType.instance())
                 )
                 .validations(greatExpectations)
-                .validations(validation().col("trip_distance").lessThan(500));
+                .validations(validation().field("trip_distance").lessThan(500));
 
         var conf = configuration().enableGeneratePlanAndTasks(true)
                 .enableGenerateValidations(true)

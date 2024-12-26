@@ -8,7 +8,7 @@ class AdvancedGreatExpectationsPlanRun extends PlanRun {
   val greatExpectationsSource = metadataSource.greatExpectations("/opt/app/mount/ge/taxi-expectations.json")
 
   val jsonTask = json("my_json", "/opt/app/data/taxi_json", Map("saveMode" -> "overwrite"))
-    .schema(
+    .fields(
       field.name("vendor_id"),
       field.name("pickup_datetime").`type`(TimestampType),
       field.name("dropoff_datetime").`type`(TimestampType),
@@ -29,7 +29,7 @@ class AdvancedGreatExpectationsPlanRun extends PlanRun {
       field.name("congestion_surcharge").`type`(DoubleType),
     )
     .validations(greatExpectationsSource)
-    .validations(validation.col("trip_distance").lessThan(500))
+    .validations(validation.field("trip_distance").lessThan(500))
 
   val conf = configuration
     .enableGenerateValidations(true)

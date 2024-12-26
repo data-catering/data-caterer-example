@@ -9,7 +9,7 @@ class CassandraPlanRun extends PlanRun {
 
   val accountTask = cassandra("customer_cassandra", "host.docker.internal:9042")
     .table("account", "accounts")
-    .schema(
+    .fields(
       field.name("account_id").regex("ACC[0-9]{8}").unique(true),
       field.name("amount").`type`(DoubleType).min(1).max(1000),
       field.name("created_by").sql("CASE WHEN status IN ('open', 'closed') THEN 'eod' ELSE 'event' END"),
@@ -21,14 +21,14 @@ class CassandraPlanRun extends PlanRun {
 
   val accountHistoryTask = cassandra(accountTask)
     .table("account", "account_status_history")
-    .schema(
+    .fields(
       field.name("account_id"),
       field.name("eod_date").`type`(DateType),
       field.name("status"),
       field.name("updated_by"),
       field.name("updated_time").`type`(TimestampType)
     )
-    .count(count.recordsPerColumnGenerator(generator.min(0).max(5), "account_id"))
+    .count(count.recordsPerFieldGenerator(generator.min(0).max(5), "account_id"))
 
   val config = configuration
     .generatedReportsFolderPath("/opt/app/data/report")

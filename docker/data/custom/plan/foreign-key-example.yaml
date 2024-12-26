@@ -10,6 +10,11 @@ tasks:
 
 sinkOptions:
   foreignKeys:
-    - - "postgresCustomer.accounts.account_number"
-      - - "json.account.account_id"
-      - []
+    - source:
+        dataSource: "postgresCustomer"
+        step: "accounts"
+        fields: [ "account_number" ]
+      generate:
+        - dataSource: "json"
+          step: "account"
+          fields: [ "account_id" ]

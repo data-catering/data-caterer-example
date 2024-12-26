@@ -8,7 +8,7 @@ import java.util.Map;
 public class AdvancedOpenMetadataSourceJavaPlanRun extends PlanRun {
     {
         var jsonTask = json("my_json", "/opt/app/data/json", Map.of("saveMode", "overwrite"))
-                .schema(metadataSource().openMetadataJava(
+                .fields(metadataSource().openMetadataJava(
                         "http://host.docker.internal:5001",
                         Constants.OPEN_METADATA_AUTH_TYPE_OPEN_METADATA(),
                         Map.of(
@@ -16,9 +16,9 @@ public class AdvancedOpenMetadataSourceJavaPlanRun extends PlanRun {
                                 Constants.OPEN_METADATA_TABLE_FQN(), "sample_data.ecommerce_db.shopify.raw_customer"
                         )
                 ))
-                .schema(
+                .fields(
                         field().name("platform").oneOf("website", "mobile"),
-                        field().name("customer").schema(field().name("sex").oneOf("M", "F", "O"))
+                        field().name("customer").fields(field().name("sex").oneOf("M", "F", "O"))
                 )
                 .count(count().records(10));
 

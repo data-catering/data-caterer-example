@@ -10,7 +10,7 @@ class PostgresPlanRun extends PlanRun {
 
   val accountTask = postgres("customer_postgres", "jdbc:postgresql://host.docker.internal:5432/customer")
     .table("account", "accounts")
-    .schema(
+    .fields(
       field.name("account_number").regex("[0-9]{10}").unique(true),
       field.name("customer_id_int").`type`(IntegerType).min(1).max(1000),
       field.name("created_by").expression("#{Name.name}"),
@@ -22,7 +22,7 @@ class PostgresPlanRun extends PlanRun {
 
   val balancesTask = postgres(accountTask)
     .table("account", "balances")
-    .schema(
+    .fields(
       field.name("account_number").regex("[0-9]{10}").unique(true),
       field.name("create_time").`type`(TimestampType),
       field.name("account_status").oneOf("open", "closed", "suspended", "pending"),
@@ -31,7 +31,7 @@ class PostgresPlanRun extends PlanRun {
 
   val transactionsTask = postgres(accountTask)
     .table("account", "transactions")
-    .schema(
+    .fields(
       field.name("account_number"),
       field.name("create_time").`type`(TimestampType),
       field.name("transaction_id"),

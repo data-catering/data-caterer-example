@@ -8,7 +8,7 @@ public class AdvancedCassandraJavaPlanRun extends PlanRun {
     {
         var accountTask = cassandra("customer_cassandra", "host.docker.internal:9042")
                 .table("account", "accounts")
-                .schema(
+                .fields(
                         field().name("account_id").regex("ACC[0-9]{8}").primaryKey(true),
                         field().name("amount").type(DoubleType.instance()).min(1).max(1000),
                         field().name("created_by").sql("CASE WHEN status IN ('open', 'closed') THEN 'eod' ELSE 'event'"),

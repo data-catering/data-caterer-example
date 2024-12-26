@@ -12,7 +12,7 @@ import java.util.Map;
 public class CsvJavaPlan extends PlanRun {
     {
         var accountTask = csv("customer_accounts", "/opt/app/data/customer/account", Map.of("header", "true"))
-                .schema(
+                .fields(
                         field().name("account_id").regex("ACC[0-9]{8}").unique(true),
                         field().name("balance").type(new DecimalType(5, 2)).min(1).max(1000),
                         field().name("created_by").sql("CASE WHEN status IN ('open', 'closed') THEN 'eod' ELSE 'event' END"),
@@ -23,14 +23,14 @@ public class CsvJavaPlan extends PlanRun {
                 .count(count().records(100));
 
         var transactionTask = csv("customer_transactions", "/opt/app/data/customer/transaction", Map.of("header", "true"))
-                .schema(
+                .fields(
                         field().name("account_id"),
                         field().name("full_name"),
                         field().name("amount").type(DoubleType.instance()).min(1).max(100),
                         field().name("time").type(TimestampType.instance()).min(java.sql.Date.valueOf("2022-01-01")),
                         field().name("date").type(DateType.instance()).sql("DATE(time)")
                 )
-                .count(count().recordsPerColumnGenerator(generator().min(0).max(5), "account_id", "full_name"));
+                .count(count().recordsPerFieldGenerator(generator().min(0).max(5), "account_id", "full_name"));
 
         var config = configuration()
                 .generatedReportsFolderPath("/opt/app/data/report")

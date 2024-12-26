@@ -7,92 +7,59 @@ steps:
     options:
       keyspace: "account"
       table: "accounts"
-    schema:
-      fields:
-        - name: "account_id"
-          type: "string"
-          generator:
-            type: "regex"
-            options:
-              regex: "ACC1[0-9]{5,10}"
-        - name: "amount"
-          type: "double"
-          generator:
-            type: "random"
-            options:
-              min: 10.0
-              max: 100.0
-        - name: "name"
-          type: "string"
-          generator:
-            type: "random"
-            options:
-              expression: "#{Name.name}"
-        - name: "created_by"
-          type: "string"
-          generator:
-            type: "random"
-            options:
-              expression: "#{Name.username}"
-        - name: "status"
-          type: "string"
-          generator:
-            type: "oneOf"
-            options:
-              oneOf:
-                - "open"
-                - "closed"
-        - name: "open_time"
-          type: "timestamp"
-          generator:
-            type: "random"
+    fields:
+      - name: "account_id"
+        options:
+          regex: "ACC1[0-9]{5,10}"
+      - name: "amount"
+        type: "double"
+        options:
+          min: 10.0
+          max: 100.0
+      - name: "name"
+        options:
+          expression: "#{Name.name}"
+      - name: "created_by"
+        options:
+          expression: "#{Name.username}"
+      - name: "status"
+        options:
+          oneOf:
+            - "open"
+            - "closed"
+      - name: "open_time"
+        type: "timestamp"
   - name: "account_status_history"
     type: "cassandra"
     count:
       records: 10
-      perColumn:
-        columnNames:
+      perField:
+        fieldNames:
           - "account_id"
-        generator:
-          type: "random"
-          options:
-            max: 5
-            min: 1
+        options:
+          max: 5
+          min: 1
     options:
       keyspace: "account"
       table: "account_status_history"
-    schema:
-      fields:
-        - name: "account_id"
-          type: "string"
-          generator:
-            type: "regex"
-            options:
-              regex: "ACC1[0-9]{5,10}"
-        - name: "eod_date"
-          type: "date"
-          generator:
-            type: "sql"
-            options:
-              sql: "TO_DATE(updated_time)"
-        - name: "status"
-          type: "string"
-          generator:
-            type: "oneOf"
-            options:
-              oneOf:
-                - "open"
-                - "closed"
-                - "pending"
-                - "active"
-                - "disabled"
-        - name: "updated_by"
-          type: "string"
-          generator:
-            type: "random"
-            options:
-              expression: "#{Name.username}"
-        - name: "updated_time"
-          type: "timestamp"
-          generator:
-            type: "random"
+    fields:
+      - name: "account_id"
+        options:
+          regex: "ACC1[0-9]{5,10}"
+      - name: "eod_date"
+        type: "date"
+        options:
+          sql: "TO_DATE(updated_time)"
+      - name: "status"
+        options:
+          oneOf:
+            - "open"
+            - "closed"
+            - "pending"
+            - "active"
+            - "disabled"
+      - name: "updated_by"
+        options:
+          expression: "#{Name.username}"
+      - name: "updated_time"
+        type: "timestamp"
