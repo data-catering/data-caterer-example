@@ -4,7 +4,7 @@ import io.github.datacatering.datacaterer.api.PlanRun
 
 class AdvancedBatchEventPlanRun extends PlanRun {
 
-  val kafkaTask = new AdvancedKafkaPlanRun().kafkaTask
+  val kafkaTask = new KafkaPlanRun().kafkaTask
 
   val csvTask = csv("my_csv", "/opt/app/data/csv/account")
     .fields(

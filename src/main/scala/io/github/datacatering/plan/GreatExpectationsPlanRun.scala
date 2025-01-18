@@ -3,7 +3,7 @@ package io.github.datacatering.plan
 import io.github.datacatering.datacaterer.api.PlanRun
 import io.github.datacatering.datacaterer.api.model.{DoubleType, IntegerType, TimestampType}
 
-class AdvancedGreatExpectationsPlanRun extends PlanRun {
+class GreatExpectationsPlanRun extends PlanRun {
 
   val greatExpectationsSource = metadataSource.greatExpectations("/opt/app/mount/ge/taxi-expectations.json")
 

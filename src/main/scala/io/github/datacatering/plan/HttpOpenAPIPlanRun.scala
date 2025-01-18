@@ -3,7 +3,7 @@ package io.github.datacatering.plan
 import io.github.datacatering.datacaterer.api.PlanRun
 import io.github.datacatering.datacaterer.api.model.Constants.{ROWS_PER_SECOND, VALIDATION_IDENTIFIER}
 
-class AdvancedHttpPlanRun extends PlanRun {
+class HttpOpenAPIPlanRun extends PlanRun {
 
   val httpTask = http("my_http", options = Map(ROWS_PER_SECOND -> "1"))
     .fields(metadataSource.openApi("/opt/app/mount/http/petstore.json"))

@@ -3,7 +3,7 @@ package io.github.datacatering.plan
 import io.github.datacatering.datacaterer.api.PlanRun
 import io.github.datacatering.datacaterer.api.model.Constants.{OPEN_METADATA_AUTH_TYPE_OPEN_METADATA, OPEN_METADATA_JWT_TOKEN, OPEN_METADATA_TABLE_FQN}
 
-class AdvancedOpenMetadataSourcePlanRun extends PlanRun {
+class OpenMetadataSourcePlanRun extends PlanRun {
 
   val openMetadataSource = metadataSource.openMetadata(
     "http://host.docker.internal:8585/api",

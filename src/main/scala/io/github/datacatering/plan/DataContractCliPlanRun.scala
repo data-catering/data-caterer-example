@@ -2,7 +2,7 @@ package io.github.datacatering.plan
 
 import io.github.datacatering.datacaterer.api.PlanRun
 
-class AdvancedDataContractCliPlanRun extends PlanRun {
+class DataContractCliPlanRun extends PlanRun {
 
   val accountTask = csv("customer_accounts", "/opt/app/data/customer/account-datacontract-cli", Map("header" -> "true"))
     .fields(metadataSource.dataContractCli("/opt/app/mount/datacontract-cli/datacontract.yaml"))

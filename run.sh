@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 
 data_caterer_version=$(grep dataCatererVersion gradle.properties | cut -d= -f2)
+data_caterer_user=${DATA_CATERER_API_USER:-}
+data_caterer_token=${DATA_CATERER_API_TOKEN:-}
+
+echo "Checking for Data Caterer user and token..."
+if [[ -z ${DATA_CATERER_API_USER} ]]; then
+  read -p "Data Caterer user: " data_caterer_user
+  DATA_CATERER_API_USER=data_caterer_user
+fi
+if [[ -z ${DATA_CATERER_API_TOKEN} ]]; then
+  read -p "Data Caterer token: " -s data_caterer_token
+  DATA_CATERER_API_TOKEN=data_caterer_token
+  echo
+fi
+
 if [[ -s ".tmp_prev_class_name" ]]; then
   prev_class_name=$(cat .tmp_prev_class_name)
 else
@@ -38,11 +52,14 @@ DOCKER_CMD=(
   -v "$(pwd)/docker/sample/tracking:/opt/app/record-tracking"
   -v "$(pwd)/docker/mount:/opt/app/mount"
   -v "$(pwd)/docker/data/custom:/opt/app/custom"
+  -v "$(pwd)/docker/tmp:/tmp"
   -e "APPLICATION_CONFIG_PATH=/opt/app/custom/application.conf"
   -e "$full_class_name"
   -e "DEPLOY_MODE=client"
   -e "DRIVER_MEMORY=2g"
   -e "EXECUTOR_MEMORY=2g"
+  -e "DATA_CATERER_API_USER=$data_caterer_user"
+  -e "DATA_CATERER_API_TOKEN=$data_caterer_token"
   --network "docker_default"
   datacatering/data-caterer:"$data_caterer_version"
 )

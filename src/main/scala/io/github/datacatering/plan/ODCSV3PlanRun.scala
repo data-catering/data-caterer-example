@@ -3,7 +3,7 @@ package io.github.datacatering.plan
 import io.github.datacatering.datacaterer.api.PlanRun
 import io.github.datacatering.datacaterer.api.model.DoubleType
 
-class AdvancedODCSV3PlanRun extends PlanRun {
+class ODCSV3PlanRun extends PlanRun {
 
   val accountTask = csv("customer_accounts", "/opt/app/data/customer/account-odcs-v3", Map("header" -> "true", "saveMode" -> "overwrite"))
     .fields(metadataSource.openDataContractStandard("/opt/app/mount/odcs/full-example-v3.odcs.yaml"))

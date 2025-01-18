@@ -2,11 +2,10 @@ package io.github.datacatering.plan
 
 import io.github.datacatering.datacaterer.api.PlanRun
 
-class AdvancedMySqlPlanRun extends PlanRun {
+class CassandraAutoPlanRun extends PlanRun {
 
-  val accountTask = mysql("customer_mysql", "jdbc:mysql://host.docker.internal:3306/customer")
-    .fields(field.name("account_number").regex("[0-9]{10}"))
-    .count(count.records(100))
+  val accountTask = cassandra("customer_cassandra", "host.docker.internal:9042")
+    .fields(field.name("account_id").regex("ACC[0-9]{8}"))
 
   val config = configuration
     .generatedReportsFolderPath("/opt/app/data/report")
