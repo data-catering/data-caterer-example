@@ -5,7 +5,7 @@ import io.github.datacatering.datacaterer.javaapi.api.PlanRun;
 import java.util.List;
 import java.util.Map;
 
-public class AdvancedMetadataSourceJavaPlanRun extends PlanRun {
+public class MetadataSourceJavaPlanRun extends PlanRun {
     {
         var csvTask = csv("my_csv", "/opt/app/data/csv", Map.of("saveMode", "overwrite", "header", "true"))
                 .fields(metadataSource().marquez("http://host.docker.internal:5001", "food_delivery", "public.delivery_7_days"))

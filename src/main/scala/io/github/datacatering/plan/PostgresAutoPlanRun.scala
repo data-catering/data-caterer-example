@@ -2,10 +2,10 @@ package io.github.datacatering.plan
 
 import io.github.datacatering.datacaterer.api.PlanRun
 
-class AdvancedCassandraPlanRun extends PlanRun {
+class PostgresAutoPlanRun extends PlanRun {
 
-  val accountTask = cassandra("customer_cassandra", "host.docker.internal:9042")
-    .fields(field.name("account_id").regex("ACC[0-9]{8}"))
+  val accountTask = postgres("customer_postgres", "jdbc:postgresql://host.docker.internal:5432/customer")
+    .fields(field.name("account_number").regex("[0-9]{10}"))
 
   val config = configuration
     .generatedReportsFolderPath("/opt/app/data/report")

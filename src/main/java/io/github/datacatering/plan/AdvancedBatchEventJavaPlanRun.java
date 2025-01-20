@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class AdvancedBatchEventJavaPlanRun extends PlanRun {
     {
-        var kafkaTask = new AdvancedKafkaJavaPlanRun().getKafkaTask();
+        var kafkaTask = new KafkaJavaPlanRun().getKafkaTask();
 
         var csvTask = csv("my_csv", "/opt/app/data/csv/account")
                 .fields(

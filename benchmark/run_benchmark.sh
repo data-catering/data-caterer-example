@@ -18,7 +18,7 @@ case "${uname_out}" in
     *)        sed_option="-r";;
 esac
 data_sizes=(10000 100000 1000000)
-job_names=("BenchmarkForeignKeyPlanRun" "BenchmarkJsonPlanRun" "BenchmarkParquetPlanRun") #"BenchmarkAdvancedKafkaPlanRun"
+job_names=("BenchmarkForeignKeyPlanRun" "BenchmarkJsonPlanRun" "BenchmarkParquetPlanRun")
 
 spark_query_execution_engines=("default" "blaze" "comet" "gluten")
 gluten_spark_conf="--conf \"spark.plugins=io.glutenproject.GlutenPlugin\" --conf \"spark.memory.offHeap.enabled=true\" --conf \"spark.memory.offHeap.size=1024mb\" --conf \"spark.shuffle.manager=org.apache.spark.shuffle.sort.ColumnarShuffleManager\""

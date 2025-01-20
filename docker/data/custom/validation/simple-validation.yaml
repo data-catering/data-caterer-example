@@ -7,6 +7,20 @@ dataSources:
         path: "app/src/test/resources/sample/json/txn-gen"
       validations:
         - expr: "amount < 100"
+        - field: amount
+          validation:
+            - type: "null"
+              negate: true
+            - type: "between"
+              min: 1
+              max: 10
+              description: "hello"
+              errorThreshold: 2
+            - type: "quantileValuesBetween"
+              quantileRanges:
+                0.1:
+                  - - 1.0
+                    - 10.0
         - expr: "year == 2021"
           errorThreshold: 0.1
         - expr: "regexp_like(name, 'Peter .*')"

@@ -4,7 +4,7 @@ import io.github.datacatering.datacaterer.api.model.DoubleType;
 import io.github.datacatering.datacaterer.api.model.TimestampType;
 import io.github.datacatering.datacaterer.javaapi.api.PlanRun;
 
-public class AdvancedCassandraJavaPlanRun extends PlanRun {
+public class CassandraJavaPlanRun extends PlanRun {
     {
         var accountTask = cassandra("customer_cassandra", "host.docker.internal:9042")
                 .table("account", "accounts")

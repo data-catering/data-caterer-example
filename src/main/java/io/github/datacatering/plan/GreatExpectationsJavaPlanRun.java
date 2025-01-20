@@ -7,7 +7,7 @@ import io.github.datacatering.datacaterer.javaapi.api.PlanRun;
 
 import java.util.Map;
 
-public class AdvancedGreatExpectationsJavaPlanRun extends PlanRun {
+public class GreatExpectationsJavaPlanRun extends PlanRun {
     {
         var greatExpectations = metadataSource().greatExpectations("/opt/app/mount/ge/taxi-expectations.json");
 

@@ -5,7 +5,7 @@ import io.github.datacatering.datacaterer.javaapi.api.PlanRun;
 
 import java.util.Map;
 
-public class AdvancedOpenMetadataSourceJavaPlanRun extends PlanRun {
+public class OpenMetadataSourceJavaPlanRun extends PlanRun {
     {
         var jsonTask = json("my_json", "/opt/app/data/json", Map.of("saveMode", "overwrite"))
                 .fields(metadataSource().openMetadataJava(

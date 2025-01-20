@@ -3,11 +3,11 @@ package io.github.datacatering.plan
 import io.github.datacatering.datacaterer.api.PlanRun
 import io.github.datacatering.datacaterer.api.model.Constants.{ROWS_PER_SECOND, VALIDATION_IDENTIFIER}
 
-class AdvancedHttpPlanRun extends PlanRun {
+class HttpOpenAPIPlanRun extends PlanRun {
 
   val httpTask = http("my_http", options = Map(ROWS_PER_SECOND -> "1"))
     .fields(metadataSource.openApi("/opt/app/mount/http/petstore.json"))
-    .fields(field.name("bodyContent").fields(field.name("id").regex("ID[0-9]{8}")))
+    .fields(field.name("body").fields(field.name("id").regex("ID[0-9]{8}")))
     .count(count.records(2))
 
   val httpGetTask = http("get_http", options = Map(VALIDATION_IDENTIFIER -> "GET/pets/{id}"))
@@ -20,7 +20,7 @@ class AdvancedHttpPlanRun extends PlanRun {
     )
 
   val myPlan = plan.addForeignKeyRelationship(
-    foreignField("my_http", "POST/pets", "bodyContent.id"),
+    foreignField("my_http", "POST/pets", "body.id"),
     foreignField("my_http", "DELETE/pets/{id}", "pathParamid"),
     foreignField("my_http", "GET/pets/{id}", "pathParamid")
   )
