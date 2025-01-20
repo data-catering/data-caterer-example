@@ -10,7 +10,7 @@ steps:
       - name: "key"
         type: "string"
         options:
-          sql: "content.account_id"
+          sql: "body.account_id"
       - name: "messageBody"
         fields:
           - name: "account_id"
@@ -27,11 +27,10 @@ steps:
           - name: "details"
             fields:
               - name: "name"
-              - name: "txn_date"
+              - name: "first_txn_date"
                 type: "date"
                 options:
-                  min: "2021-01-01"
-                  max: "2021-12-31"
+                  sql: "ELEMENT_AT(SORT_ARRAY(body.transactions.txn_date), 1)"
               - name: "updated_by"
                 fields:
                   - name: "user"
@@ -48,7 +47,7 @@ steps:
         fields:
           - name: "account-id"
             options:
-              sql: "content.account_id"
+              sql: "body.account_id"
           - name: "updated"
             options:
-              sql: "content.details.update_by.time"
+              sql: "body.details.update_by.time"

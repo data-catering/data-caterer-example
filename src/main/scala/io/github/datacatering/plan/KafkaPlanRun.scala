@@ -7,14 +7,14 @@ import java.sql.Date
 
 class KafkaPlanRun extends PlanRun {
 
-  val kafkaTask = kafka("my_kafka", "kafkaserver:29092")
-    .topic("account-topic")
+  val kafkaTask = kafka("my_kafka", "kafka:29092")
+    .topic("accounts")
     .fields(
-      field.name("key").sql("content.account_id"),
+      field.name("key").sql("body.account_id"),
       //field.name("partition").type(IntegerType),  can define partition here
       field.messageHeaders(
-        field.messageHeader("account-id", "content.account_id"),
-        field.messageHeader("updated", "content.details.updated_by.time"),
+        field.messageHeader("account-id", "body.account_id"),
+        field.messageHeader("updated", "body.details.updated_by.time"),
       )
     )
     .fields(
@@ -26,7 +26,7 @@ class KafkaPlanRun extends PlanRun {
         field.name("details").`type`(StructType)
           .fields(
             field.name("name").expression("#{Name.name}"),
-            field.name("first_txn_date").`type`(DateType).sql("ELEMENT_AT(SORT_ARRAY(content.transactions.txn_date), 1)"),
+            field.name("first_txn_date").`type`(DateType).sql("ELEMENT_AT(SORT_ARRAY(body.transactions.txn_date), 1)"),
             field.name("updated_by").`type`(StructType)
               .fields(
                 field.name("user"),

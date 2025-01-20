@@ -9,10 +9,16 @@ class HttpPlanRun extends PlanRun {
   val httpPostTask = http("post_http", options = Map(VALIDATION_IDENTIFIER -> "POST/pets"))
     .fields(field.httpHeader("Content-Type").static("application/json"))
     .fields(field.httpUrl(
-      "http://localhost:80/pets", //url
+      "http://host.docker.internal:80/anything/pets", //url
       HttpMethodEnum.POST //method
     ): _*)
-    .count(count.records(50))
+    .fields(
+      field.httpBody(
+        field.name("id").regex("[0-9]{8}"),
+        field.name("name").expression("#{Name.name}"),
+      ): _*
+    )
+    .count(count.records(10))
     .validations(
       validation.field("request.method").isEqual("POST"),
       validation.field("request.method").isEqualField("response.statusText"),
@@ -22,18 +28,23 @@ class HttpPlanRun extends PlanRun {
     )
 
   val httpGetTask = http("get_http", options = Map(VALIDATION_IDENTIFIER -> "GET/pets/{id}"))
-    .fields(field.httpHeader("Content-Type").static("application/json"))
-    .fields(field.httpUrl(
-      "http://localhost:80/pets/{id}", //url
-      HttpMethodEnum.GET, //method
-      List(
-        field.name("id") //path parameters
-      ),
-      List(
-        field.name("limit").`type`(IntegerType).min(1).max(10) //query parameters
-      )
-    ): _*)
-    .count(count.records(50))
+    .fields(
+      field.httpHeader("Content-Type").static("application/json"),
+      field.httpHeader("Content-Length"),
+      field.httpHeader("X-Account-Id").sql("body.account_id"),
+    )
+    .fields(
+      field.httpUrl(
+        "http://host.docker.internal:80/anything/pets/{id}", //url
+        HttpMethodEnum.GET, //method
+        List(
+          field.name("id") //path parameters
+        ),
+        List(
+          field.name("limit").`type`(IntegerType).min(1).max(10) //query parameters
+        )
+      ): _*
+    )
     .validations(
       validation.field("request.method").isEqual("GET"),
       validation.field("request.method").isEqualField("response.statusText"),
@@ -43,7 +54,7 @@ class HttpPlanRun extends PlanRun {
     )
 
   val myPlan = plan.addForeignKeyRelationship(
-    foreignField(httpPostTask, "bodyContent.id"),
+    foreignField(httpPostTask, "body.id"),
     foreignField(httpGetTask, "id")
   )
 
