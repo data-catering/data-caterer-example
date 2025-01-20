@@ -32,6 +32,9 @@ jobs:
       - name: Get Spark query engine jars
         run: bash benchmark/setup_query_engine_jars.sh
       - name: Run benchmark script
+        env:
+          DATA_CATERER_API_USER: ${{ secrets.DATA_CATERER_API_USER }}
+          DATA_CATERER_API_TOKEN: ${{ secrets.DATA_CATERER_API_TOKEN }}
         run: |
           version=$(grep dataCatererVersion gradle.properties | cut -d= -f2)
           bash benchmark/run_benchmark.sh

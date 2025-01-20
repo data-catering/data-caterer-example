@@ -3,6 +3,8 @@
 enable_query_engine_run=${ENABLE_QUERY_ENGINE_RUN:-true}
 enable_data_size_run=${ENABLE_DATA_SIZE_RUN:-true}
 enable_data_sink_run=${ENABLE_DATA_SINK_RUN:-true}
+data_caterer_user=${DATA_CATERER_API_USER:-}
+data_caterer_token=${DATA_CATERER_API_TOKEN:-}
 
 data_caterer_version=$(grep dataCatererVersion gradle.properties | cut -d= -f2)
 default_job="io.github.datacatering.plan.benchmark.BenchmarkParquetPlanRun"
@@ -59,6 +61,8 @@ run_docker() {
         -e "DEPLOY_MODE=client" \
         -e "$driver_memory" \
         -e "$executor_memory" \
+        -e "DATA_CATERER_API_USER=$data_caterer_user" \
+        -e "DATA_CATERER_API_TOKEN=$data_caterer_token" \
         -e "ADDITIONAL_OPTS=$additional_conf" \
         datacatering/data-caterer:"$data_caterer_version";
     } 2>&1 | grep "real " | sed "$sed_option" "s/^.*real ([0-9\.]+)$/\1/")
