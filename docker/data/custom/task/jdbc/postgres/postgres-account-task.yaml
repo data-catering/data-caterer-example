@@ -3,7 +3,7 @@ steps:
   - name: "accounts"
     type: "postgres"
     count:
-      records: "1000"
+      records: 1000
     options:
       dbtable: "account.accounts"
     fields:
@@ -32,7 +32,7 @@ steps:
       - name: "customer_id_bigint"
         type: "long"
       - name: "customer_id_decimal"
-        type: "decimal(26,3)"
+        type: "decimal"
       - name: "customer_id_real"
         type: "float"
       - name: "customer_id_double"

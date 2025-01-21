@@ -34,6 +34,24 @@ Want some YAML instead? Also, no worries. Check the example [plan](docker/data/c
    to [DocumentationPlanRun.scala](src/main/scala/io/github/datacatering/plan/DocumentationPlanRun.scala)
    1. Needs to extend `io.github.datacatering.datacaterer.api.PlanRun`
 
+### YAML
+
+1. Copy existing plan file (such as [foreign-key.yaml](docker/data/custom/plan/foreign-key.yaml)) in directory 
+[docker/data/custom/plan](docker/data/custom/plan)
+2. Copy existing task file (such as [json-account-task.yaml](docker/data/custom/task/file/json/json-account-task.yaml))
+in directory [docker/data/custom/task](docker/data/custom/task)
+   1. If you want to run data validations, copy the file [simple-validation.yaml](docker/data/custom/validation/simple-validation.yaml)
+   and add validation to plan via:
+   ```yaml
+   validations:
+     - "<name of validation (i.e. account_checks)>"
+   ```
+3. [Use JSON schema to help creating metadata for plan, tasks or validations](schema/data-caterer-latest.json).
+You can import this schema into your IDE for validation of your YAML files. Links below show how you can import the schema:
+- [IntelliJ](https://www.jetbrains.com/help/idea/json.html#ws_json_schema_add_custom)
+- [VS Code](https://code.visualstudio.com/docs/languages/json#_json-schemas-and-settings)
+
+
 ## Run
 
 Requires:

@@ -1,9 +1,9 @@
 name: "simple_kafka"
 steps:
   - name: "kafka_account"
-    type: "json"
+    type: "kafka"
     count:
-      records: "10"
+      records: 10
     options:
       topic: "account-topic"
     fields:
@@ -12,19 +12,21 @@ steps:
         options:
           sql: "body.account_id"
       - name: "messageBody"
+        type: struct
         fields:
           - name: "account_id"
           - name: "year"
             type: "int"
             options:
-              min: "2021"
-              max: "2022"
+              min: 2021
+              max: 2022
           - name: "amount"
             type: "double"
             options:
-              min: "10.0"
-              max: "100.0"
+              min: 10.0
+              max: 100.0
           - name: "details"
+            type: struct
             fields:
               - name: "name"
               - name: "first_txn_date"
@@ -32,6 +34,7 @@ steps:
                 options:
                   sql: "ELEMENT_AT(SORT_ARRAY(body.transactions.txn_date), 1)"
               - name: "updated_by"
+                type: struct
                 fields:
                   - name: "user"
                   - name: "time"
@@ -44,6 +47,7 @@ steps:
               - name: "amount"
                 type: "double"
       - name: "messageHeaders"
+        type: struct
         fields:
           - name: "account-id"
             options:

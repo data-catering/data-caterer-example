@@ -5,17 +5,20 @@ steps:
       records: 50
     fields:
       - name: "httpUrl"
+        type: struct
         fields:
           - name: "url"
             static: "http://localhost:80/anything/{id}"
           - name: "method"
             static: "PUT"
           - name: "pathParam"
+            type: array
             fields:
               - name: "id"
                 options:
                   sql: "body.account_id"
           - name: "queryParam"
+            type: array
             fields:
               - name: "limit"
                 type: "integer"
@@ -23,6 +26,7 @@ steps:
                   min: 1
                   max: 10
       - name: "httpHeaders"
+        type: array
         fields:
           - name: "Content-Type"
             static: "application/json"
@@ -35,6 +39,7 @@ steps:
             options:
               sql: "body.details.updated_by.time"
       - name: "httpBody"
+        type: struct
         fields:
           - name: "account_id"
             options:
@@ -50,6 +55,7 @@ steps:
               min: 10.0
               max: 100.0
           - name: "details"
+            type: struct
             fields:
               - name: "name"
               - name: "txn_date"
@@ -58,6 +64,7 @@ steps:
                   min: "2021-01-01"
                   max: "2021-12-31"
               - name: "updated_by"
+                type: struct
                 fields:
                   - name: "user"
                   - name: "time"

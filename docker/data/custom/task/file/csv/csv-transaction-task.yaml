@@ -21,7 +21,7 @@ steps:
         options:
           expression: "#{Name.name}"
       - name: "year"
-        type: "int"
+        type: "integer"
         options:
           min: 2021
           max: 2022

@@ -1,7 +1,7 @@
 name: "json_account_jms"
 steps:
   - name: "jms_account"
-    type: "json"
+    type: "solace"
     count:
       records: 50
     options:
@@ -12,10 +12,11 @@ steps:
         options:
           sql: "to_json(content)"
       - name: "content"
+        type: struct
         fields:
           - name: "account_id"
           - name: "year"
-            type: "int"
+            type: "integer"
             options:
               min: 2021
               max: 2022
@@ -25,6 +26,7 @@ steps:
               min: 10.0
               max: 100.0
           - name: "details"
+            type: "struct"
             fields:
               - name: "name"
               - name: "txn_date"
@@ -33,6 +35,7 @@ steps:
                   min: "2021-01-01"
                   max: "2021-12-31"
               - name: "updated_by"
+                type: "struct"
                 fields:
                   - name: "user"
                   - name: "time"

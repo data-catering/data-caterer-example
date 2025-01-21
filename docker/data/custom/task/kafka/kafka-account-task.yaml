@@ -1,7 +1,7 @@
 name: "json_account_kafka"
 steps:
   - name: "kafka_account"
-    type: "json"
+    type: "kafka"
     count:
       records: 10
     options:
@@ -26,6 +26,7 @@ steps:
 #          options:
 #            sql: "1"
       - name: "content"
+        type: struct
         fields:
           - name: "account_id"
           - name: "year"
@@ -39,6 +40,7 @@ steps:
               min: 10.0
               max: 100.0
           - name: "details"
+            type: struct
             fields:
               - name: "name"
               - name: "txn_date"
@@ -47,6 +49,7 @@ steps:
                   min: "2021-01-01"
                   max: "2021-12-31"
               - name: "updated_by"
+                type: struct
                 fields:
                   - name: "user"
                   - name: "time"
