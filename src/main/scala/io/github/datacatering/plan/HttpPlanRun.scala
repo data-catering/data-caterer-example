@@ -23,6 +23,7 @@ class HttpPlanRun extends PlanRun {
       validation.field("request.method").isEqual("POST"),
       validation.field("request.method").isEqualField("response.statusText"),
       validation.field("response.statusCode").isEqual(200),
+      validation.field("response.timeTaken").lessThan(100),
       validation.field("response.headers.Content-Length").greaterThan(0),
       validation.field("response.headers.Content-Type").isEqual("application/json"),
     )

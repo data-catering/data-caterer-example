@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class HttpJavaPlanRun extends PlanRun {
     {
-        var httpTask = http("my_http", Map.of(Constants.ROWS_PER_SECOND(), "1"))
+        var httpTask = http("my_http", Map.of(Constants.ROWS_PER_SECOND(), "1", Constants.VALIDATION_IDENTIFIER(), "POST/pets"))
                 .fields(
                         field().httpHeader("Content-Type").staticValue("application/json"),
                         field().httpHeader("Content-Length"),
@@ -32,6 +32,13 @@ public class HttpJavaPlanRun extends PlanRun {
                                         field().name("age").type(IntegerType.instance()).max(100)
                                 )
                         )
+                )
+                .validations(
+                        validation().field("request.method").isEqual("POST"),
+                        validation().field("response.statusCode").isEqual(200),
+                        validation().field("response.timeTaken").lessThan(100),
+                        validation().field("response.headers.Content-Length").greaterThan(0),
+                        validation().field("response.headers.Content-Type").isEqual("application/json")
                 )
                 .count(count().records(2));
 
