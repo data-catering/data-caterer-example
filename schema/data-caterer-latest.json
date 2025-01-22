@@ -14,7 +14,6 @@
       "$ref": "#/$defs/DataCatererValidation"
     }
   ],
-  "additionalProperties": false,
   "$defs": {
     "DataCatererPlan": {
       "type": "object",
@@ -76,7 +75,9 @@
                       "$ref": "#/$defs/ForeignKeyRelation"
                     }
                   }
-                }
+                },
+                "required": ["source"],
+                "additionalProperties": false
               }
             },
             "seed": {
@@ -156,22 +157,22 @@
                   },
                   "perField": {
                     "type": "object",
-                    "description": "Generate records per unique set of column values. For example, generate 5 transactions for each 'account_number'.",
+                    "description": "Generate records per unique set of field values. For example, generate 5 transactions for each 'account_number'.",
                     "properties": {
                       "fieldNames": {
                         "type": "array",
-                        "description": "Array of column names to generate records for each set of unique values.",
+                        "description": "Array of field names to generate records for each set of unique values.",
                         "items": {
                           "type": "string",
-                          "description": "Column name found within schema fields."
+                          "description": "Field name found within schema fields."
                         }
                       },
                       "count": {
                         "type": "integer",
-                        "description": "Static number of records per unique set of column values."
+                        "description": "Static number of records per unique set of field values."
                       },
                       "options": {
-                        "description": "Random number of records per unique set of column values.",
+                        "description": "Random number of records per unique set of field values.",
                         "$ref": "#/$defs/CountGeneratorOptions"
                       }
                     },
@@ -272,7 +273,7 @@
                         },
                         "partitionBy": {
                           "type": "string",
-                          "description": "Column name(s) to partition dataset by (comma separated)."
+                          "description": "Field name(s) to partition dataset by (comma separated)."
                         }
                       },
                       "required": ["path"]
@@ -539,8 +540,7 @@
             "unevaluatedProperties": false
           }
         }
-      },
-      "additionalProperties": false
+      }
     },
     "DataCatererValidation": {
       "type": "object",
@@ -589,7 +589,7 @@
                 "$ref": "#/$defs/UpstreamValidation"
               },
               {
-                "$ref": "#/$defs/ColumnNameValidation"
+                "$ref": "#/$defs/FieldNameValidation"
               }
             ]
           }
@@ -612,7 +612,8 @@
           "type": "array",
           "description": "Name of the field(s) to relate with."
         }
-      }
+      },
+      "additionalProperties": false
     },
     "EnvironmentVariables": {
       "type": "object",
@@ -714,6 +715,15 @@
           "type": "number",
           "description": "Mean of generated values.",
           "default": 500.0
+        },
+        "distribution": {
+          "type": "string",
+          "description": "Type of distribution values follow.",
+          "enum": ["normal", "exponential"]
+        },
+        "distributionRateParam": {
+          "type": "number",
+          "description": "If distribution is `exponential`, rate parameter to adjust exponential distribution."
         }
       },
       "allOf": [
@@ -1097,27 +1107,27 @@
     },
     "ValidationSelectExpression": {
       "const": "selectExpr",
-      "description": "SQL expression used to apply to columns before running validations."
+      "description": "SQL expression used to apply to fields before running validations."
     },
     "ValidationAggregateExpression": {
       "const": "aggExpr",
       "description": "SQL expression to define validation after aggregation. Check https://spark.apache.org/docs/latest/api/sql for reference."
     },
-    "ValidationAggregateColumn": {
-      "const": "aggCol",
-      "description": "Column name to run aggregation on."
+    "ValidationAggregateField": {
+      "const": "aggField",
+      "description": "Field name to run aggregation on."
     },
     "ValidationAggregateType": {
       "const": "aggType",
       "description": "Type of aggregation to run. Can be either: sum, avg, max, min, mean, stddev, count."
     },
-    "ValidationAggregateGroupByColumns": {
-      "const": "groupByCols",
-      "description": "Column names to group by for aggregation calculation."
+    "ValidationAggregateGroupByFields": {
+      "const": "groupByFields",
+      "description": "Field names to group by for aggregation calculation."
     },
-    "ValidationUpstreamJoinColumns": {
-      "const": "joinColumns",
-      "description": "Column names to run join operation on."
+    "ValidationUpstreamJoinFields": {
+      "const": "joinFields",
+      "description": "Field names to run join operation on."
     },
     "ValidationUpstreamJoinType": {
       "const": "joinType",
@@ -1135,25 +1145,25 @@
       "const": "validation",
       "description": "Validation to run after join with upstream data source."
     },
-    "ValidationColumnNameType": {
-      "const": "columnNameType",
-      "description": "Type of column name validation to run."
+    "ValidationFieldNameType": {
+      "const": "fieldNameType",
+      "description": "Type of field name validation to run."
     },
-    "ValidationColumnNameCount": {
+    "ValidationFieldNameCount": {
       "const": "count",
-      "description": "Expected number of column names."
+      "description": "Expected number of field names."
     },
-    "ValidationColumnNameMaxCount": {
+    "ValidationFieldNameMaxCount": {
       "const": "maxCount",
-      "description": "Maximum number of column names."
+      "description": "Maximum number of field names."
     },
-    "ValidationColumnNameMinCount": {
+    "ValidationFieldNameMinCount": {
       "const": "minCount",
-      "description": "Minimum number of column names."
+      "description": "Minimum number of field names."
     },
-    "ValidationColumnNames": {
+    "ValidationFieldNames": {
       "const": "names",
-      "description": "Expected column names."
+      "description": "Expected field names."
     },
     "BasicValidation": {
       "type": "object",
@@ -1191,13 +1201,13 @@
             "$ref": "#/$defs/ValidationPreFilterExpression"
           },
           {
-            "$ref": "#/$defs/ValidationAggregateColumn"
+            "$ref": "#/$defs/ValidationAggregateField"
           },
           {
             "$ref": "#/$defs/ValidationAggregateExpression"
           },
           {
-            "$ref": "#/$defs/ValidationAggregateGroupByColumns"
+            "$ref": "#/$defs/ValidationAggregateGroupByFields"
           },
           {
             "$ref": "#/$defs/ValidationAggregateType"
@@ -1222,7 +1232,7 @@
             "$ref": "#/$defs/ValidationUpstreamDataSource"
           },
           {
-            "$ref": "#/$defs/ValidationUpstreamJoinColumns"
+            "$ref": "#/$defs/ValidationUpstreamJoinFields"
           },
           {
             "$ref": "#/$defs/ValidationUpstreamJoinType"
@@ -1236,7 +1246,7 @@
         ]
       }
     },
-    "ColumnNameValidation": {
+    "FieldNameValidation": {
       "type": "object",
       "propertyNames": {
         "anyOf": [
@@ -1250,19 +1260,19 @@
             "$ref": "#/$defs/ValidationPreFilterExpression"
           },
           {
-            "$ref": "#/$defs/ValidationColumnNameCount"
+            "$ref": "#/$defs/ValidationFieldNameCount"
           },
           {
-            "$ref": "#/$defs/ValidationColumnNameMaxCount"
+            "$ref": "#/$defs/ValidationFieldNameMaxCount"
           },
           {
-            "$ref": "#/$defs/ValidationColumnNameMinCount"
+            "$ref": "#/$defs/ValidationFieldNameMinCount"
           },
           {
-            "$ref": "#/$defs/ValidationColumnNames"
+            "$ref": "#/$defs/ValidationFieldNames"
           },
           {
-            "$ref": "#/$defs/ValidationColumnNameType"
+            "$ref": "#/$defs/ValidationFieldNameType"
           }
         ]
       }

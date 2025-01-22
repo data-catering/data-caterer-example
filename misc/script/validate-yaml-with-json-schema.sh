@@ -11,7 +11,7 @@ json_schema_version=${JSON_SCHEMA_VERSION:-latest}
 num_failed_validation=0
 
 echo "Checking if $json_schema_version JSON schema is valid"
-if ajv compile --spec=draft2019 -c ajv-formats -s "${script_dir}/../../schema/data-caterer-task-${json_schema_version}.json"; then
+if ajv compile --spec=draft2019 -c ajv-formats -s "${script_dir}/../../schema/data-caterer-${json_schema_version}.json"; then
   echo -e "${GREEN}Valid JSON schema${NC}"
 else
   echo -e "${RED}Invalid JSON schema, exiting${NC}"
@@ -19,8 +19,8 @@ else
 fi
 
 echo -e "Validating YAML files based on ${json_schema_version} JSON schema"
-for file in docker/data/custom/task/*/*/*.yaml docker/data/custom/task/*/*.yaml; do
-  if ajv validate --all-errors --spec=draft2019 -c ajv-formats -s "${script_dir}/../../schema/data-caterer-task-${json_schema_version}.json" -d "${script_dir}/../../${file}"; then
+for file in docker/data/custom/task/*/*/*.yaml docker/data/custom/task/*/*.yaml docker/data/custom/validation/*.yaml docker/data/custom/validation/*/*.yaml; do
+  if ajv validate --all-errors --spec=draft2019 -c ajv-formats -s "${script_dir}/../../schema/data-caterer-${json_schema_version}.json" -d "${script_dir}/../../${file}"; then
     echo -e "${GREEN}Passed validation, file=${file}${NC}"
   else
     num_failed_validation=$((num_failed_validation+1))
