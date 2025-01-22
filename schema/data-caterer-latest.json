@@ -565,6 +565,27 @@
         }
       }
     },
+    "DataCatererValidationRule": {
+      "type": "object",
+      "description": "Data validation rule.",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/BasicValidation"
+        },
+        {
+          "$ref": "#/$defs/AggregationValidation"
+        },
+        {
+          "$ref": "#/$defs/UpstreamValidation"
+        },
+        {
+          "$ref": "#/$defs/FieldNameValidation"
+        },
+        {
+          "$ref": "#/$defs/FieldValidations"
+        }
+      ]
+    },
     "DataCatererBaseValidation": {
       "type": "object",
       "properties": {
@@ -576,23 +597,11 @@
           "type": "array",
           "description": "Array of data validation rules.",
           "items": {
-            "type": "object",
-            "description": "Data validation rule.",
-            "oneOf": [
-              {
-                "$ref": "#/$defs/BasicValidation"
-              },
-              {
-                "$ref": "#/$defs/AggregationValidation"
-              },
-              {
-                "$ref": "#/$defs/UpstreamValidation"
-              },
-              {
-                "$ref": "#/$defs/FieldNameValidation"
-              }
-            ]
+            "$ref": "#/$defs/DataCatererValidationRule"
           }
+        },
+        "waitCondition": {
+          "type": "object"
         },
         "additionalProperties": false
       }
@@ -1090,192 +1099,615 @@
       "unevaluatedProperties": false
     },
     "ValidationDescription": {
-      "const": "description",
+      "type": "string",
       "description": "Description of the validation rule. Helpful to provide additional context."
     },
     "ValidationErrorThreshold": {
-      "const": "errorThreshold",
+      "type": "number",
       "description": "Define the number of records or percentage of records that do not meet the validation rule before marking the validation as failed."
     },
     "ValidationPreFilterExpression": {
-      "const": "preFilterExpr",
+      "type": "string",
       "description": "SQL expression that is run to filter data before running the validation."
     },
     "ValidationExpression": {
-      "const": "expr",
+      "type": "string",
       "description": "SQL expression to define validation. Check https://spark.apache.org/docs/latest/api/sql for reference."
     },
     "ValidationSelectExpression": {
-      "const": "selectExpr",
+      "type": "string",
       "description": "SQL expression used to apply to fields before running validations."
     },
+    "ValidationAdditionalProperties": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/ValidationDescription"
+        },
+        "errorThreshold": {
+          "$ref": "#/$defs/ValidationErrorThreshold"
+        },
+        "preFilterExpr": {
+          "$ref": "#/$defs/ValidationPreFilterExpression"
+        }
+      }
+    },
     "ValidationAggregateExpression": {
-      "const": "aggExpr",
+      "type": "string",
       "description": "SQL expression to define validation after aggregation. Check https://spark.apache.org/docs/latest/api/sql for reference."
     },
     "ValidationAggregateField": {
-      "const": "aggField",
+      "type": "string",
       "description": "Field name to run aggregation on."
     },
     "ValidationAggregateType": {
-      "const": "aggType",
-      "description": "Type of aggregation to run. Can be either: sum, avg, max, min, mean, stddev, count."
+      "type": "string",
+      "description": "Type of aggregation to run. Can be either: sum, avg, max, min, mean, stddev, count.",
+      "enum": ["sum", "avg", "max", "min", "mean", "stddev", "count"]
     },
     "ValidationAggregateGroupByFields": {
-      "const": "groupByFields",
-      "description": "Field names to group by for aggregation calculation."
+      "type": "array",
+      "description": "Field names to group by for aggregation calculation.",
+      "items": {
+        "type": "string"
+      }
     },
     "ValidationUpstreamJoinFields": {
-      "const": "joinFields",
-      "description": "Field names to run join operation on."
+      "type": "array",
+      "description": "Field names to run join operation on.",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
     },
     "ValidationUpstreamJoinType": {
-      "const": "joinType",
-      "description": "Type of join to run."
+      "type": "string",
+      "description": "Type of join to run.",
+      "enum": [
+        "inner",
+        "outer", "full", "full_outer",
+        "left", "left_outer",
+        "right", "right_outer",
+        "left_semi", "semi",
+        "left_anti", "anti",
+        "cross"
+      ],
+      "default": "inner"
     },
     "ValidationUpstreamDataSource": {
-      "const": "upstreamDataSource",
+      "type": "string",
       "description": "Name of the upstream data source."
     },
     "ValidationUpstreamReadOptions": {
-      "const": "upstreamReadOptions",
+      "type": "object",
       "description": "Additional configuration to connect to upstream data source."
     },
-    "ValidationUpstreamNestedValidation": {
-      "const": "validation",
-      "description": "Validation to run after join with upstream data source."
+    "ValidationUpstreamNestedValidations": {
+      "type": "array",
+      "description": "Validation to run after join with upstream data source.",
+      "items": {
+        "$ref": "#/$defs/DataCatererValidationRule"
+      },
+      "minItems": 1
     },
     "ValidationFieldNameType": {
-      "const": "fieldNameType",
-      "description": "Type of field name validation to run."
+      "type": "string",
+      "description": "Type of field name validation to run.",
+      "enum": ["fieldCountEqual", "fieldCountBetween", "fieldNameMatchOrder", "fieldNameMatchSet"]
     },
     "ValidationFieldNameCount": {
-      "const": "count",
+      "type": "integer",
       "description": "Expected number of field names."
     },
     "ValidationFieldNameMaxCount": {
-      "const": "maxCount",
+      "type": "integer",
       "description": "Maximum number of field names."
     },
     "ValidationFieldNameMinCount": {
-      "const": "minCount",
+      "type": "integer",
       "description": "Minimum number of field names."
     },
     "ValidationFieldNames": {
-      "const": "names",
-      "description": "Expected field names."
+      "type": "array",
+      "description": "Expected field names.",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "FieldValidationType": {
+      "type": "string",
+      "description": "Type of field validation to run on field.",
+      "enum": [
+        "equal", "null", "contains", "unique", "lessThan", "greaterThan", "between", "in", "matches",
+        "matchesList", "startsWith", "endsWith", "size", "lessThanSize", "greaterThanSize", "luhnCheck", "hasType",
+        "hasTypes", "distinctInSet", "distinctContainsSet", "distinctEqual", "maxBetween", "meanBetween", "medianBetween",
+        "minBetween", "stdDevBetween", "sumBetween", "lengthBetween", "lengthEqual", "isDecreasing", "isIncreasing",
+        "isJsonParsable", "matchJsonSchema", "matchDateTimeFormat", "mostCommonValueInSet", "uniqueValuesProportionBetween",
+        "quantileValuesBetween"
+      ]
+    },
+    "FieldValidationNegate": {
+      "type": "boolean",
+      "description": "Negate the validation rule.",
+      "default": false
+    },
+    "FieldValidationStrictly": {
+      "type": "boolean",
+      "description": "Strictly compare the value. For example, if set to false for lessThan, the comparison will be <=.",
+      "default": true
+    },
+    "FieldValidationAnyValue": {
+      "description": "Value to compare against.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "object"
+        },
+        {
+          "type": "array"
+        }
+      ]
+    },
+    "FieldValidation": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/FieldValidationType"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["equal"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "$ref": "#/$defs/FieldValidationAnyValue"
+              },
+              "negate": {
+                "$ref": "#/$defs/FieldValidationNegate"
+              }
+            },
+            "required": ["value"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["null", "unique", "luhnCheck", "isJsonParsable"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "negate": {
+                "$ref": "#/$defs/FieldValidationNegate"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["contains", "startsWith", "endsWith", "hasType"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "string",
+                "description": "Value to check if field contains."
+              },
+              "negate": {
+                "$ref": "#/$defs/FieldValidationNegate"
+              }
+            },
+            "required": ["value"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["matches"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "regex": {
+                "type": "string",
+                "description": "Regex pattern to match against."
+              },
+              "negate": {
+                "$ref": "#/$defs/FieldValidationNegate"
+              }
+            },
+            "required": ["regex"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["matchJsonSchema"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "schema": {
+                "type": "string",
+                "description": "JSON schema to match against."
+              },
+              "negate": {
+                "$ref": "#/$defs/FieldValidationNegate"
+              }
+            },
+            "required": ["schema"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["matchDateTimeFormat"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "format": {
+                "type": "string",
+                "description": "DateTime format to match against."
+              },
+              "negate": {
+                "$ref": "#/$defs/FieldValidationNegate"
+              }
+            },
+            "required": ["format"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["lessThan", "greaterThan"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "$ref": "#/$defs/FieldValidationAnyValue"
+              },
+              "strictly": {
+                "$ref": "#/$defs/FieldValidationStrictly"
+              }
+            },
+            "required": ["value"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["maxBetween", "meanBetween", "medianBetween", "minBetween", "stdDevBetween", "sumBetween", "lengthBetween", "uniqueValuesProportionBetween"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "min": {
+                "$ref": "#/$defs/FieldValidationAnyValue"
+              },
+              "max": {
+                "$ref": "#/$defs/FieldValidationAnyValue"
+              },
+              "negate": {
+                "$ref": "#/$defs/FieldValidationNegate"
+              }
+            },
+            "required": ["min", "max"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["isDecreasing", "isIncreasing"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "strictly": {
+                "$ref": "#/$defs/FieldValidationStrictly"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["distinctInSet", "distinctContainsSet", "distinctEqual", "mostCommonValueInSet"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "values": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/FieldValidationAnyValue"
+                }
+              },
+              "negate": {
+                "$ref": "#/$defs/FieldValidationNegate"
+              }
+            },
+            "required": ["values"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["hasTypes"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "values": {
+                "type": "array",
+                "description": "List of data types to check for.",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "negate": {
+                "$ref": "#/$defs/FieldValidationNegate"
+              }
+            },
+            "required": ["values"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["size", "lessThanSize", "greaterThanSize"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "size": {
+                "type": "integer",
+                "description": "Expected size of field."
+              },
+              "negate": {
+                "$ref": "#/$defs/FieldValidationNegate"
+              }
+            },
+            "required": ["size"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["matchesList"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "regexes": {
+                "type": "array",
+                "description": "List of regex patterns to match against.",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "matchAll": {
+                "type": "boolean",
+                "description": "Match all regex patterns.",
+                "default": true
+              },
+              "negate": {
+                "$ref": "#/$defs/FieldValidationNegate"
+              }
+            },
+            "required": ["regexes"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["quantileValuesBetween"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "quantileRanges": {
+                "type": "object",
+                "description": "Quantile ranges to check for.",
+                "patternProperties": {
+                  "^([0,1]\\.\\d+)$": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2
+                    },
+                    "maxItems": 1,
+                    "minItems": 1
+                  }
+                }
+              },
+              "negate": {
+                "$ref": "#/$defs/FieldValidationNegate"
+              }
+            },
+            "required": ["quantileRanges"]
+          }
+        }
+      ]
+    },
+    "FieldValidations": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": "Field name to run validation on."
+        },
+        "validation": {
+          "type": "array",
+          "description": "List of validation rules to run on the field.",
+          "items": {
+            "$ref": "#/$defs/FieldValidation"
+          }
+        }
+      },
+      "additionalProperties": false
     },
     "BasicValidation": {
       "type": "object",
-      "propertyNames": {
-        "anyOf": [
-          {
-            "$ref": "#/$defs/ValidationDescription"
-          },
-          {
-            "$ref": "#/$defs/ValidationErrorThreshold"
-          },
-          {
-            "$ref": "#/$defs/ValidationPreFilterExpression"
-          },
-          {
-            "$ref": "#/$defs/ValidationExpression"
-          },
-          {
-            "$ref": "#/$defs/ValidationSelectExpression"
-          }
-        ]
-      }
+      "properties": {
+        "expr": {
+          "$ref": "#/$defs/ValidationExpression"
+        },
+        "selectExpr": {
+          "$ref": "#/$defs/ValidationSelectExpression"
+        }
+      },
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ValidationAdditionalProperties"
+        }
+      ],
+      "required": ["expr"],
+      "unevaluatedProperties": false
     },
     "AggregationValidation": {
       "type": "object",
-      "propertyNames": {
-        "anyOf": [
-          {
-            "$ref": "#/$defs/ValidationDescription"
-          },
-          {
-            "$ref": "#/$defs/ValidationErrorThreshold"
-          },
-          {
-            "$ref": "#/$defs/ValidationPreFilterExpression"
-          },
-          {
-            "$ref": "#/$defs/ValidationAggregateField"
-          },
-          {
-            "$ref": "#/$defs/ValidationAggregateExpression"
-          },
-          {
-            "$ref": "#/$defs/ValidationAggregateGroupByFields"
-          },
-          {
-            "$ref": "#/$defs/ValidationAggregateType"
-          }
-        ]
-      }
+      "properties": {
+        "aggField": {
+          "$ref": "#/$defs/ValidationAggregateField"
+        },
+        "aggType": {
+          "$ref": "#/$defs/ValidationAggregateType"
+        },
+        "groupByFields": {
+          "$ref": "#/$defs/ValidationAggregateGroupByFields"
+        },
+        "aggExpr": {
+          "$ref": "#/$defs/ValidationAggregateExpression"
+        }
+      },
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ValidationAdditionalProperties"
+        }
+      ],
+      "required": ["aggType"],
+      "unevaluatedProperties": false
     },
     "UpstreamValidation": {
       "type": "object",
-      "propertyNames": {
-        "anyOf": [
-          {
-            "$ref": "#/$defs/ValidationDescription"
-          },
-          {
-            "$ref": "#/$defs/ValidationErrorThreshold"
-          },
-          {
-            "$ref": "#/$defs/ValidationPreFilterExpression"
-          },
-          {
-            "$ref": "#/$defs/ValidationUpstreamDataSource"
-          },
-          {
-            "$ref": "#/$defs/ValidationUpstreamJoinFields"
-          },
-          {
-            "$ref": "#/$defs/ValidationUpstreamJoinType"
-          },
-          {
-            "$ref": "#/$defs/ValidationUpstreamNestedValidation"
-          },
-          {
-            "$ref": "#/$defs/ValidationUpstreamReadOptions"
-          }
-        ]
-      }
+      "properties": {
+        "upstreamDataSource": {
+          "$ref": "#/$defs/ValidationUpstreamDataSource"
+        },
+        "joinFields": {
+          "$ref": "#/$defs/ValidationUpstreamJoinFields"
+        },
+        "joinType": {
+          "$ref": "#/$defs/ValidationUpstreamJoinType"
+        },
+        "validations": {
+          "$ref": "#/$defs/ValidationUpstreamNestedValidations"
+        },
+        "upstreamReadOptions": {
+          "$ref": "#/$defs/ValidationUpstreamReadOptions"
+        }
+      },
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ValidationAdditionalProperties"
+        }
+      ],
+      "required": ["upstreamDataSource", "joinFields", "validations"],
+      "unevaluatedProperties": false
     },
     "FieldNameValidation": {
       "type": "object",
-      "propertyNames": {
-        "anyOf": [
-          {
-            "$ref": "#/$defs/ValidationDescription"
-          },
-          {
-            "$ref": "#/$defs/ValidationErrorThreshold"
-          },
-          {
-            "$ref": "#/$defs/ValidationPreFilterExpression"
-          },
-          {
-            "$ref": "#/$defs/ValidationFieldNameCount"
-          },
-          {
-            "$ref": "#/$defs/ValidationFieldNameMaxCount"
-          },
-          {
-            "$ref": "#/$defs/ValidationFieldNameMinCount"
-          },
-          {
-            "$ref": "#/$defs/ValidationFieldNames"
-          },
-          {
-            "$ref": "#/$defs/ValidationFieldNameType"
-          }
-        ]
-      }
+      "properties": {
+        "fieldNameType": {
+          "$ref": "#/$defs/ValidationFieldNameType"
+        },
+        "count": {
+          "$ref": "#/$defs/ValidationFieldNameCount"
+        },
+        "maxCount": {
+          "$ref": "#/$defs/ValidationFieldNameMaxCount"
+        },
+        "minCount": {
+          "$ref": "#/$defs/ValidationFieldNameMinCount"
+        },
+        "names": {
+          "$ref": "#/$defs/ValidationFieldNames"
+        }
+      },
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ValidationAdditionalProperties"
+        }
+      ],
+      "required": ["fieldNameType"],
+      "unevaluatedProperties": false
     }
   }
 }

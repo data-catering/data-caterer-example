@@ -38,7 +38,7 @@ dataSources:
             - type: "hasType"
               value: "string"
               negate: true
-            - type: "hasType"
+            - type: "hasTypes"
               values: [ "string", "double" ]
               negate: true
             - type: "distinctInSet"
@@ -70,13 +70,13 @@ dataSources:
         - field: links
           validation:
             - type: "size"
-              value: 5
+              size: 5
               negate: true
             - type: "lessThanSize"
-              value: 5
+              size: 5
               strictly: false
             - type: "greaterThanSize"
-              value: 5
+              size: 5
               strictly: false
         - field: amount
           validation:
@@ -128,6 +128,6 @@ dataSources:
             - type: "quantileValuesBetween"
               quantileRanges:
                 "0.1":
-                  - 1.0
-                  - 10.0
+                  - - 1.0
+                    - 10.0
               negate: true
