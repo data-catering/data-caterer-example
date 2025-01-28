@@ -1,7 +1,6 @@
 package io.github.datacatering.plan
 
 import io.github.datacatering.datacaterer.api.PlanRun
-import io.github.datacatering.datacaterer.api.connection.{ConnectionTaskBuilder, FileBuilder}
 import io.github.datacatering.datacaterer.api.model.{DateType, DoubleType, TimestampType}
 
 class MultipleRecordsPerColPlan extends PlanRun {

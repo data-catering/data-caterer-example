@@ -1,7 +1,7 @@
 package io.github.datacatering.plan
 
 import io.github.datacatering.datacaterer.api.PlanRun
-import io.github.datacatering.datacaterer.api.model.{DateType, DoubleType, IntegerType, TimestampType}
+import io.github.datacatering.datacaterer.api.model.{DoubleType, IntegerType, TimestampType}
 
 import java.sql.Date
 import java.time.LocalDate

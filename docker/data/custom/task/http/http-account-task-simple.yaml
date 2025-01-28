@@ -2,7 +2,7 @@ name: "simple_http"
 steps:
   - name: "account"
     count:
-      records: 50
+      records: 5
     fields:
       - name: "httpUrl"
         type: struct
@@ -31,6 +31,7 @@ steps:
           - name: "Content-Type"
             static: "application/json"
           - name: "Content-Length"
+            type: "integer"
           - name: "X-Account-Id"
             options:
               sql: "body.account_id"

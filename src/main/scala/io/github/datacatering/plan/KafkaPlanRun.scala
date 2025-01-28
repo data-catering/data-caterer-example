@@ -3,7 +3,7 @@ package io.github.datacatering.plan
 import io.github.datacatering.datacaterer.api.PlanRun
 import io.github.datacatering.datacaterer.api.model.{ArrayType, DateType, DoubleType, IntegerType, StructType, TimestampType}
 
-import java.sql.Date
+import java.time.LocalDate
 
 class KafkaPlanRun extends PlanRun {
 
@@ -22,7 +22,7 @@ class KafkaPlanRun extends PlanRun {
         field.name("account_id").regex("ACC[0-9]{8}"),
         field.name("year").`type`(IntegerType).min(2021).max(2023),
         field.name("account_status").oneOf("open", "closed", "suspended", "pending"),
-        field.name("amount").`type`(DoubleType),
+        field.name("amount").`type`(DoubleType).round(2),
         field.name("details").`type`(StructType)
           .fields(
             field.name("name").expression("#{Name.name}"),
@@ -35,7 +35,7 @@ class KafkaPlanRun extends PlanRun {
           ),
         field.name("transactions").`type`(ArrayType)
           .fields(
-            field.name("txn_date").`type`(DateType).min(Date.valueOf("2021-01-01")).max("2021-12-31"),
+            field.name("txn_date").`type`(DateType).min(LocalDate.now().minusDays(10)),
             field.name("amount").`type`(DoubleType),
           )
       ): _*

@@ -3,7 +3,6 @@ package io.github.datacatering.plan;
 import io.github.datacatering.datacaterer.api.model.ArrayType;
 import io.github.datacatering.datacaterer.api.model.DateType;
 import io.github.datacatering.datacaterer.api.model.DoubleType;
-import io.github.datacatering.datacaterer.api.model.HeaderType;
 import io.github.datacatering.datacaterer.api.model.IntegerType;
 import io.github.datacatering.datacaterer.api.model.TimestampType;
 import io.github.datacatering.datacaterer.javaapi.api.PlanRun;

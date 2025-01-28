@@ -52,6 +52,7 @@ fi
 docker network create --driver bridge docker_default || true
 
 echo "Running Data Caterer via docker, version: $data_caterer_version"
+docker network inspect insta-infra_default >/dev/null 2>&1 || docker network create --driver bridge insta-infra_default --label com.docker.compose.network="default"
 DOCKER_CMD=(
   docker run -p 4040:4040
   -v "$(pwd)/build/libs/data-caterer-example-0.1.0.jar:/opt/app/job.jar"

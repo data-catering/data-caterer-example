@@ -14,10 +14,7 @@ import java.sql.Date;
 public class KafkaJavaPlanRun extends PlanRun {
     {
         var kafkaTask = getKafkaTask();
-
-        var conf = configuration()
-                .generatedReportsFolderPath("/opt/app/data/report");
-
+        var conf = configuration().generatedReportsFolderPath("/opt/app/data/report");
         execute(conf, kafkaTask);
     }
 

@@ -4,15 +4,10 @@ import io.github.datacatering.datacaterer.api.PlanRun
 
 class PostgresAutoPlanRun extends PlanRun {
 
-  val accountTask = postgres("customer_postgres", "jdbc:postgresql://host.docker.internal:5432/customer")
-    .fields(field.name("account_number").regex("[0-9]{10}"))
+  val postgresTask = postgres("customer_postgres", "jdbc:postgresql://host.docker.internal:5432/customer")
+  val transactionTask = postgres(postgresTask).table("account.transactions")
+    .count(count.recordsPerFieldGenerator(generator.min(1).max(10), "account_number"))
+  val config = configuration.enableGeneratePlanAndTasks(true)
 
-  val config = configuration
-    .generatedReportsFolderPath("/opt/app/data/report")
-    .enableGeneratePlanAndTasks(true)
-    .enableRecordTracking(true)
-    .enableDeleteGeneratedRecords(true)
-    .enableGenerateData(false)
-
-  execute(config, accountTask)
+  execute(config, postgresTask, transactionTask)
 }
