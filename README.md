@@ -14,10 +14,10 @@ This repo contains example Java and Scala API usage for Data Caterer.
 
 Check out any of [the Scala examples](src/main/scala/io/github/datacatering/plan) or 
 [Java examples](src/main/java/io/github/datacatering/plan). If you are looking for more information, you can follow 
-[**detailed documentation found here**](https://data.catering/setup/).
+[**detailed documentation found here**](https://data.catering/latest/docs/).
 
 Not comfortable with Java or Scala? No worries.
-[You can use the UI via these steps](https://data.catering/get-started/quick-start/).
+[You can use the UI via these steps](https://data.catering/latest/get-started/quick-start/).
   
 Want some YAML instead? Also, no worries. Check the example [plan](docker/data/custom/plan) and 
 [task](docker/data/custom/task) YAML files here.
@@ -84,7 +84,7 @@ cd docker
 PLAN_CLASS=io.github.datacatering.plan.DocumentationPlanRun DATA_SOURCE=postgres docker-compose up -d datacaterer
 ```
 
-[Details from docs](https://data.catering/get-started/docker/).  
+[Details from docs](https://data.catering/latest/get-started/quick-start/).  
 Docker compose sample found under `docker` folder.
 
 ```shell

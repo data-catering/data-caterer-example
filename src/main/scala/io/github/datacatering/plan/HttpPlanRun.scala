@@ -11,12 +11,12 @@ class HttpPlanRun extends PlanRun {
     .fields(field.httpUrl(
       "http://host.docker.internal:80/anything/pets", //url
       HttpMethodEnum.POST //method
-    ): _*)
+    ))
     .fields(
       field.httpBody(
         field.name("id").regex("[0-9]{8}"),
         field.name("name").expression("#{Name.name}"),
-      ): _*
+      )
     )
     .count(count.records(10))
     .validations(
@@ -44,7 +44,7 @@ class HttpPlanRun extends PlanRun {
         List(
           field.name("limit").`type`(IntegerType).min(1).max(10) //query parameters
         )
-      ): _*
+      )
     )
     .validations(
       validation.field("request.method").isEqual("GET"),

@@ -29,7 +29,7 @@ class BenchmarkValidationPlanRun extends PlanRun {
   )
 
   val firstJsonTask = json("my_first_json", "/opt/app/data/first_json", Map("saveMode" -> "overwrite"))
-    .fields(baseSchema: _*)
+    .fields(baseSchema)
     .count(count.records(100000))
 
   val thirdJsonTask = json("my_third_json", "/opt/app/data/third_json", Map("saveMode" -> "overwrite"))
@@ -41,7 +41,7 @@ class BenchmarkValidationPlanRun extends PlanRun {
     .count(count.records(10000).recordsPerField(3, "account_id"))
 
   val jsonValidationTask = json("my_json", "/opt/app/data/json", Map("saveMode" -> "overwrite"))
-    .fields(baseSchema: _*)
+    .fields(baseSchema)
     .count(count.records(10000))
     .validations(
       validation.fieldNames.countEqual(10),

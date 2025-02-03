@@ -37,7 +37,7 @@ class SolacePlanRun extends PlanRun {
             field.name("txn_date").`type`(DateType).min(Date.valueOf("2021-01-01")).max("2021-12-31"),
             field.name("amount").`type`(DoubleType),
           )
-      ): _*
+      )
     ).count(count.records(10))
 
   val config = configuration

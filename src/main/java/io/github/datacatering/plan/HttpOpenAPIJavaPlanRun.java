@@ -9,7 +9,7 @@ public class HttpOpenAPIJavaPlanRun extends PlanRun {
     {
         var httpTask = http("my_http", Map.of(Constants.ROWS_PER_SECOND(), "1"))
                 .fields(metadataSource().openApi("/opt/app/mount/http/petstore.json"))
-                .fields(field().name("body").fields(field().name("id").regex("ID[0-9]{8}")))
+                .fields(field().httpBody(field().name("id").regex("ID[0-9]{8}")))
                 .count(count().records(2));
 
         var myPlan = plan().addForeignKeyRelationship(

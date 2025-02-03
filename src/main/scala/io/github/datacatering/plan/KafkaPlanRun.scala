@@ -38,7 +38,7 @@ class KafkaPlanRun extends PlanRun {
             field.name("txn_date").`type`(DateType).min(LocalDate.now().minusDays(10)),
             field.name("amount").`type`(DoubleType),
           )
-      ): _*
+      )
     )
     .count(count.records(10))
 

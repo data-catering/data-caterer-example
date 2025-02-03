@@ -1,7 +1,6 @@
 package io.github.datacatering.plan
 
 import io.github.datacatering.datacaterer.api.PlanRun
-import io.github.datacatering.datacaterer.api.model.{DateType, DecimalType, DoubleType, TimestampType}
 
 class CsvGenerateIcebergValidatePlan extends PlanRun {
 
