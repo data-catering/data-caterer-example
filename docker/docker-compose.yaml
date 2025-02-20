@@ -177,3 +177,19 @@ services:
     depends_on:
       kafkaserver:
         condition: "service_healthy"
+
+  rabbitmq:
+    container_name: rabbitmq
+    environment:
+      - "RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-guest}"
+      - "RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD:-guest}"
+    healthcheck:
+      interval: 30s
+      retries: 3
+      test: rabbitmq-diagnostics -q ping
+      timeout: 30s
+    hostname: my-rabbit
+    image: "rabbitmq:${RABBITMQ_VERSION:-4.0.6-management}"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
