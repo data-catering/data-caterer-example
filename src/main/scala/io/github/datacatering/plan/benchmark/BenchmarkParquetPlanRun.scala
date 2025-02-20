@@ -23,7 +23,7 @@ class BenchmarkParquetPlanRun extends PlanRun {
         .arrayMinLength(1)
         .fields(
           field.name("updated_time").`type`(TimestampType).min(Timestamp.valueOf("2022-01-01 00:00:00")),
-          field.name("status").oneOf(accountStatus: _*),
+          field.name("status").oneOf(accountStatus),
         ),
       field.name("customer_details")
         .fields(
