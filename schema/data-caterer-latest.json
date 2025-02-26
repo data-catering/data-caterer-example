@@ -125,7 +125,7 @@
               "type": {
                 "type": "string",
                 "description": "Type of data source.",
-                "enum": ["cassandra", "postgres", "mysql", "kafka", "solace", "csv", "delta", "json", "orc", "parquet", "iceberg", ""]
+                "enum": ["bigquery", "cassandra", "postgres", "mysql", "kafka", "solace", "csv", "delta", "json", "orc", "parquet", "iceberg", "rabbitmq"]
               },
               "options": {
                 "type": "object",
@@ -215,6 +215,31 @@
                         }
                       },
                       "required": ["dbtable"]
+                    }
+                  },
+                  "required": ["options"]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "enum": ["bigquery"]
+                    }
+                  },
+                  "required": ["type"]
+                },
+                "then": {
+                  "properties": {
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "table": {
+                          "type": "string",
+                          "description": "BigQuery table name. Follows format '<project>.<dataset>.<table>'."
+                        }
+                      },
+                      "required": ["table"]
                     }
                   },
                   "required": ["options"]
@@ -359,7 +384,7 @@
                 "if": {
                   "properties": {
                     "type": {
-                      "enum": ["solace"]
+                      "enum": ["solace", "rabbitmq"]
                     }
                   },
                   "required": ["type"]
@@ -633,8 +658,36 @@
     "CountGeneratorOptions": {
       "type": "object",
       "propertyNames": {
-        "enum": ["sql", "min", "max", "stddev", "mean"]
-      }
+        "enum": ["sql", "min", "max", "stddev", "mean", "oneOf"]
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": ["oneOf"]
+          },
+          "then": {
+            "properties": {
+              "oneOf": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^0|[1-9]\\d*->(0|[1-9]\\d*|\\d+\\.\\d+)$"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
     },
     "SchemaFieldDataTypes": {
       "enum": [
@@ -733,6 +786,11 @@
         "distributionRateParam": {
           "type": "number",
           "description": "If distribution is `exponential`, rate parameter to adjust exponential distribution."
+        },
+        "incremental": {
+          "type": "number",
+          "description": "Generate incremental numbers. By default, starts at 1. You can define a starting number.",
+          "default": 1
         }
       },
       "allOf": [
@@ -763,6 +821,15 @@
           "type": "string",
           "description": "Regex for generating values.",
           "examples": ["ACC[0-9]{8}"]
+        },
+        "uuid": {
+          "type": "string",
+          "description": "Generate UUID values. If non-empty, you can define another column name to generate UUID values from another columns value."
+        },
+        "incremental": {
+          "type": "number",
+          "description": "Generate incremental numbers. By default, starts at 1. You can define a starting number.",
+          "default": 1
         }
       },
       "allOf": [

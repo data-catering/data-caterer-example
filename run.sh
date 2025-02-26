@@ -64,8 +64,6 @@ DOCKER_CMD=(
   -e "APPLICATION_CONFIG_PATH=/opt/app/custom/application.conf"
   -e "$full_class_name"
   -e "DEPLOY_MODE=client"
-  -e "DRIVER_MEMORY=2g"
-  -e "EXECUTOR_MEMORY=2g"
   -e "DATA_CATERER_API_USER=$DATA_CATERER_API_USER"
   -e "DATA_CATERER_API_TOKEN=$DATA_CATERER_API_TOKEN"
   --network "insta-infra_default"
