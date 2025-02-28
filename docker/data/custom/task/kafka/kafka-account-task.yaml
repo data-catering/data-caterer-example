@@ -13,14 +13,6 @@ steps:
       - name: "value"
         options:
           sql: "to_json(content)"
-      - name: "headers"
-        type: "array<struct<key: string, value: binary>>"
-        options:
-          sql: >-
-            array(
-              named_struct('key', 'account-id', 'value', to_binary(content.account_id, 'utf-8')),
-              named_struct('key', 'updated', 'value', to_binary(content.details.updated_by.time, 'utf-8'))
-            )
 #        - name: "partition"
 #          type: "int"
 #          options:

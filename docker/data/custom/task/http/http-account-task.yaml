@@ -4,25 +4,32 @@ steps:
     count:
       records: 50
     fields:
-      - name: "url"
-        options:
-          sql: "CONCAT('http://http:80/anything/', content.account_id)"
-      - name: "method"
-        static: "PUT"
-      - name: "content_type"
-        static: "application/json"
-      - name: "headers"
-        type: "array<struct<key: string, value: string>>"
-        options:
-          sql: >-
-            array(
-              named_struct('key', 'account-id', 'value', content.account_id),
-              named_struct('key', 'updated', 'value', content.details.updated_by.time)
-            )
-      - name: "value"
-        options:
-          sql: "to_json(content)"
-      - name: "content"
+      - name: "httpUrl"
+        type: struct
+        fields:
+          - name: "url"
+            static: "http://localhost:80/anything/{id}"
+          - name: "method"
+            static: "PUT"
+          - name: "pathParam"
+            type: struct
+            fields:
+              - name: "id"
+                options:
+                  sql: "body.account_id"
+      - name: "httpHeaders"
+        type: struct
+        fields:
+          - name: "Content-Type"
+            static: "application/json"
+          - name: "account_id"
+            options:
+              sql: "body.account_id"
+          - name: "updated"
+            type: "timestamp"
+            options:
+              sql: "body.details.updated_by.time"
+      - name: "httpBody"
         type: struct
         fields:
           - name: "account_id"
