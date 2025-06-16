@@ -12,6 +12,7 @@ steps:
         options:
           sql: "body.customer_id"
       - name: "messageHeaders"
+        type: "struct"
         fields:
           - name: "customer_id"
             type: "string"
