@@ -12,3 +12,4 @@ kafka-topics --bootstrap-server $host:29092 --list
 #kafka-topics --bootstrap-server localhost:9092 --create --topic customer-product-topic --replication-factor 1 --partitions 1
 #kafka-console-consumer --bootstrap-server localhost:9092 --topic customer-product-topic --from-beginning
 #kafka-console-consumer --bootstrap-server localhost:9092 --topic customer-topic --from-beginning
+#kafka-console-consumer --bootstrap-server localhost:9092 --topic account-topic --from-beginning

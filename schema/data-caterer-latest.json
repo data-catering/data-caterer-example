@@ -59,18 +59,18 @@
                 "properties": {
                   "source": {
                     "$ref": "#/$defs/ForeignKeyRelation",
-                    "description": "Source of the relationship."
+                    "description": "Source of the relationship. Requires: dataSource, step and fields."
                   },
                   "generate": {
                     "type": "array",
-                    "description": "Generate the same values as create in the source of the relationship.",
+                    "description": "Generate the same values as create in the source of the relationship. Requires: dataSource, step and fields.",
                     "items": {
                       "$ref": "#/$defs/ForeignKeyRelation"
                     }
                   },
                   "delete": {
                     "type": "array",
-                    "description": "Delete the same values as create in the source of the relationship.",
+                    "description": "Delete the same values as create in the source of the relationship. Requires: dataSource, step and fields.",
                     "items": {
                       "$ref": "#/$defs/ForeignKeyRelation"
                     }
@@ -138,7 +138,63 @@
                       "openApi",
                       "openMetadata",
                       "openDataContractStandard",
-                      "dataContractCli"
+                      "dataContractCli",
+                      "jsonSchema"
+                    ]
+                  },
+                  "allCombinations": {
+                    "type": "boolean",
+                    "description": "Generate all combinations of the schema.",
+                    "default": false
+                  },
+                  "includeFields": {
+                    "type": "array",
+                    "description": "Include fields from the schema.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "examples": [
+                      "name",
+                      "address.street",
+                      "address.city",
+                      "address.state",
+                      "address.zip"
+                    ]
+                  },
+                  "excludeFields": {
+                    "type": "array",
+                    "description": "Exclude fields from the schema.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "examples": [
+                      "name",
+                      "address.street",
+                      "address.city",
+                      "address.state",
+                      "address.zip"
+                    ]
+                  },
+                  "includeFieldPatterns": {
+                    "type": "array",
+                    "description": "Include fields from the schema based on a pattern.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "examples": [
+                      ".*_id",
+                      "name_.*"
+                    ]
+                  },
+                  "excludeFieldPattern": {
+                    "type": "array",
+                    "description": "Exclude fields from the schema based on a pattern.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "examples": [
+                      ".*_id",
+                      "name_.*"
                     ]
                   }
                 }
@@ -560,6 +616,35 @@
                     }
                   }
                 }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "metadataSourceType": {
+                          "const": "jsonSchema"
+                        }
+                      },
+                      "required": ["metadataSourceType"]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "jsonSchemaFile": {
+                          "type": "string",
+                          "description": "JSON schema file location."
+                        }
+                      },
+                      "required": ["jsonSchemaFile"]
+                    }
+                  }
+                }
               }
             ],
             "unevaluatedProperties": false
@@ -633,6 +718,17 @@
     },
     "ForeignKeyRelation": {
       "type": "object",
+      "description": "Relationship defined by: dataSource, step and fields.",
+      "examples": [{
+        "dataSource": "my_csv",
+        "step": "account_create_step",
+        "fields": ["account_id", "year"]
+      }],
+      "default": {
+        "dataSource": "",
+        "step": "",
+        "fields": []
+      },
       "properties": {
         "dataSource": {
           "type": "string",
@@ -647,6 +743,7 @@
           "description": "Name of the field(s) to relate with."
         }
       },
+      "required": ["dataSource", "step", "fields"],
       "additionalProperties": false
     },
     "EnvironmentVariables": {
