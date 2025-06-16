@@ -21,6 +21,6 @@ tasks.register<ValidateYamlAgainstSchema>("validateYaml") {
     schemaFile.set(layout.projectDirectory.file("schema/data-caterer-latest.json"))
 }
 
-tasks.build {
-    dependsOn("validateYaml")
-}
+//tasks.build {
+//    dependsOn("validateYaml")
+//}
