@@ -22,6 +22,13 @@ else
 fi
 echo -n "$curr_class_name" > .tmp_prev_class_name
 
+enable_generate_plan_and_tasks="ENABLE_GENERATE_PLAN_AND_TASKS=false"
+# Check if env variable ENABLE_GENERATE_PLAN_AND_TASKS is set to true
+if [[ $ENABLE_GENERATE_PLAN_AND_TASKS == "true" ]]; then
+  # Then we need to include it in the docker env variable
+  enable_generate_plan_and_tasks="ENABLE_GENERATE_PLAN_AND_TASKS=true"
+fi
+
 echo "Building jar with plan run"
 ./gradlew clean build
 if [[ $? -ne 0 ]]; then
@@ -43,6 +50,7 @@ DOCKER_CMD=(
   -v "$(pwd)/docker/tmp:/tmp"
   -e "APPLICATION_CONFIG_PATH=/opt/app/custom/application.conf"
   -e "$full_class_name"
+  -e "$enable_generate_plan_and_tasks"
   -e "DEPLOY_MODE=client"
   --network "insta-infra_default"
   datacatering/data-caterer:"$data_caterer_version"
